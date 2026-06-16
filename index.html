@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verbouwing — Projectbeheer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: #E2DDD5;
+    --text: #1C1A17;
+    --text-muted: #8A8479;
+    --accent: #C17B3A;
+    --accent-light: #F5E6D3;
+    --accent-dark: #9A5E26;
+    --green: #3A7D44;
+    --green-light: #D6EDD9;
+    --red: #C0392B;
+    --red-light: #FADBD8;
+    --blue: #2874A6;
+    --blue-light: #D4E6F1;
+    --yellow: #B7770D;
+    --yellow-light: #FEF9E7;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+    --radius: 10px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── PINCODE SCREEN ─────────────────────────────────────── */
+  #pin-screen {
+    position: fixed; inset: 0; background: var(--text);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 999; gap: 32px;
+  }
+  #pin-screen h1 { color: #fff; font-size: 1.4rem; font-weight: 500; letter-spacing: 0.02em; }
+  #pin-screen .pin-subtitle { color: var(--text-muted); font-size: 0.85rem; }
+  .pin-dots { display: flex; gap: 14px; }
+  .pin-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid #555; background: transparent; transition: background 0.15s;
+  }
+  .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+  .pin-numpad { display: grid; grid-template-columns: repeat(3, 64px); gap: 12px; }
+  .pin-btn {
+    width: 64px; height: 64px; border-radius: 50%; border: none;
+    background: #2A2825; color: #fff; font-family: var(--font); font-size: 1.3rem;
+    cursor: pointer; transition: background 0.15s; user-select: none;
+  }
+  .pin-btn:hover { background: #3A3733; }
+  .pin-btn.del { font-size: 1rem; color: var(--text-muted); }
+  #pin-error { color: var(--red); font-size: 0.85rem; min-height: 1.2em; }
+
+  /* ── SETUP SCREEN ───────────────────────────────────────── */
+  #setup-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 998; padding: 24px; gap: 20px;
+  }
+  #setup-screen h2 { font-size: 1.3rem; font-weight: 600; }
+  #setup-screen p { color: var(--text-muted); font-size: 0.9rem; text-align: center; max-width: 420px; line-height: 1.6; }
+  .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; }
+  .setup-card label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .setup-card input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: var(--mono); font-size: 0.85rem; background: var(--bg); color: var(--text);
+  }
+  .setup-card input:focus { outline: none; border-color: var(--accent); }
+  .note-box { background: var(--accent-light); border-radius: 8px; padding: 12px 14px; font-size: 0.82rem; color: var(--accent-dark); line-height: 1.5; }
+
+  /* ── APP SHELL ──────────────────────────────────────────── */
+  #app { display: none; min-height: 100vh; }
+
+  header {
+    background: var(--text); color: #fff; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; height: 56px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-logo { font-size: 1rem; font-weight: 600; letter-spacing: 0.01em; }
+  .header-logo span { color: var(--accent); }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .sync-status { font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 6px; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #888; }
+  .sync-dot.ok { background: #4CAF50; }
+  .sync-dot.syncing { background: var(--accent); animation: pulse 1s infinite; }
+  .sync-dot.err { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .btn-icon { background: none; border: none; cursor: pointer; color: #aaa; padding: 6px; border-radius: 6px; transition: color 0.15s; }
+  .btn-icon:hover { color: #fff; }
+
+  nav {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; gap: 0; padding: 0 24px; overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 14px 18px; font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
+    border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { padding: 28px 24px; max-width: 1100px; margin: 0 auto; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── WIDGETS / DASHBOARD ────────────────────────────────── */
+  .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .widget {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .widget-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .widget-value { font-size: 1.9rem; font-weight: 600; color: var(--text); line-height: 1; }
+  .widget-value.accent { color: var(--accent); }
+  .widget-value.green { color: var(--green); }
+  .widget-value.red { color: var(--red); }
+  .widget-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+
+  .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; margin-top: 10px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.5s ease; }
+  .progress-bar.green { background: var(--green); }
+
+  /* ── CARDS / SECTIONS ───────────────────────────────────── */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-title { font-size: 1.05rem; font-weight: 600; }
+  .btn {
+    padding: 8px 16px; border-radius: 8px; border: none; font-family: var(--font);
+    font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: var(--red-light); color: var(--red); border: 1px solid transparent; }
+  .btn-danger:hover { background: var(--red); color: #fff; }
+  .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 12px; border-bottom: 1px solid var(--border); font-size: 0.875rem; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+
+  /* ── BADGES ─────────────────────────────────────────────── */
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-gray { background: var(--surface2); color: var(--text-muted); }
+  .badge-accent { background: var(--accent-light); color: var(--accent-dark); }
+
+  /* ── PRIORITY ────────────────────────────────────────────── */
+  .prio-hoog { color: var(--red); font-weight: 600; }
+  .prio-middel { color: var(--yellow); font-weight: 600; }
+  .prio-laag { color: var(--green); font-weight: 600; }
+
+  /* ── FORMS / MODALS ──────────────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center; z-index: 500; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: 14px; width: 100%; max-width: 520px;
+    max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-size: 1rem; font-weight: 600; }
+  .modal-close { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); padding: 4px; }
+  .modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-input, .form-select, .form-textarea {
+    padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: var(--font); font-size: 0.875rem; color: var(--text); background: var(--bg);
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+  .form-textarea { min-height: 80px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── RUIMTES ─────────────────────────────────────────────── */
+  .ruimte-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .ruimte-tab {
+    padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border);
+    background: var(--surface); font-size: 0.82rem; cursor: pointer; transition: all 0.15s;
+    font-family: var(--font);
+  }
+  .ruimte-tab:hover { border-color: var(--accent); color: var(--accent); }
+  .ruimte-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── INSPIRATIE LINKS ────────────────────────────────────── */
+  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .link-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; display: flex; flex-direction: column; gap: 8px;
+    box-shadow: var(--shadow); transition: border-color 0.15s;
+  }
+  .link-card:hover { border-color: var(--accent); }
+  .link-card-title { font-weight: 600; font-size: 0.9rem; }
+  .link-card-url { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; }
+  .link-card-url:hover { color: var(--accent); }
+  .link-card-tag { font-size: 0.72rem; }
+  .link-card-actions { display: flex; gap: 8px; margin-top: 4px; }
+
+  /* ── AGENDA ──────────────────────────────────────────────── */
+  .agenda-list { display: flex; flex-direction: column; gap: 10px; }
+  .agenda-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow);
+  }
+  .agenda-date { text-align: center; min-width: 48px; }
+  .agenda-day { font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .agenda-month { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+  .agenda-content { flex: 1; }
+  .agenda-title { font-weight: 600; font-size: 0.9rem; }
+  .agenda-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── EMPTY STATE ──────────────────────────────────────────── */
+  .empty { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 0.9rem; }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+  /* ── TOAST ───────────────────────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff;
+    padding: 12px 18px; border-radius: 10px; font-size: 0.85rem; z-index: 9999;
+    transform: translateY(100px); opacity: 0; transition: all 0.25s; pointer-events: none;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── BUDGET CHART ─────────────────────────────────────────── */
+  .budget-chart { display: flex; height: 24px; border-radius: 8px; overflow: hidden; margin-top: 8px; gap: 2px; }
+  .budget-segment { height: 100%; transition: width 0.5s ease; }
+
+  @media (max-width: 640px) {
+    main { padding: 16px; }
+    .form-row { grid-template-columns: 1fr; }
+    nav { padding: 0 12px; }
+    header { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── PIN SCREEN ── -->
+<div id="pin-screen">
+  <h1>🏗️ Verbouwing</h1>
+  <p class="pin-subtitle">Voer je pincode in</p>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot"></div><div class="pin-dot"></div>
+    <div class="pin-dot"></div><div class="pin-dot"></div>
+  </div>
+  <div class="pin-numpad" id="pin-numpad"></div>
+  <div id="pin-error"></div>
+</div>
+
+<!-- ── SETUP SCREEN ── -->
+<div id="setup-screen">
+  <h2>🔗 GitHub koppelen</h2>
+  <p>Je data wordt opgeslagen in je GitHub repo zodat alles gesynchroniseerd blijft op elk apparaat.</p>
+  <div class="setup-card">
+    <div class="form-group">
+      <label class="form-label">GitHub Personal Access Token</label>
+      <input type="password" id="setup-token" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    </div>
+    <div class="note-box">
+      💡 Maak een token aan via <strong>github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong>. Selecteer de <strong>repo</strong> scope. Wordt alleen lokaal opgeslagen en alleen gebruikt voor jouw repo.
+    </div>
+    <button class="btn btn-primary" onclick="saveSetup()">Verbinding testen & opslaan</button>
+    <button class="btn btn-ghost" onclick="skipSetup()">Overslaan (alleen lokaal)</button>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <header>
+    <div class="header-logo">🏗️ <span>Verbouwing</span></div>
+    <div class="header-actions">
+      <div class="sync-status">
+        <div class="sync-dot" id="sync-dot"></div>
+        <span id="sync-label">—</span>
+      </div>
+      <button class="btn-icon" title="Nu synchroniseren" onclick="syncNow()">↻</button>
+      <button class="btn-icon" title="Instellingen" onclick="openSettings()">⚙</button>
+    </div>
+  </header>
+
+  <nav>
+    <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showTab('taken')">Taken</button>
+    <button class="nav-tab" onclick="showTab('kosten')">Kosten</button>
+    <button class="nav-tab" onclick="showTab('leveranciers')">Leveranciers</button>
+    <button class="nav-tab" onclick="showTab('inspiratie')">Inspiratie</button>
+    <button class="nav-tab" onclick="showTab('agenda')">Agenda</button>
+  </nav>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="widget-grid" id="dash-widgets"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="dash-grids">
+        <div class="card" style="padding:20px">
+          <div class="section-title" style="margin-bottom:14px">📋 Aankomende taken</div>
+          <div id="dash-taken"></div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="section-title" style="margin-bottom:14px">📅 Aankomende agenda</div>
+          <div id="dash-agenda"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAKEN -->
+    <div id="tab-taken" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Taken</div>
+        <div style="display:flex;gap:8px">
+          <select class="form-select" id="filter-ruimte" onchange="renderTaken()" style="font-size:0.8rem;padding:6px 10px">
+            <option value="">Alle ruimtes</option>
+          </select>
+          <button class="btn btn-primary" onclick="openModal('taak')">+ Taak toevoegen</button>
+        </div>
+      </div>
+      <div class="ruimte-tabs" id="ruimte-tabs"></div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Taak</th><th>Ruimte</th><th>Toegewezen aan</th><th>Prioriteit</th><th>Status</th><th>Acties</th>
+            </tr>
+          </thead>
+          <tbody id="taken-tbody"></tbody>
+        </table>
+        <div id="taken-empty" class="empty" style="display:none"><div class="empty-icon">✅</div>Geen taken gevonden.</div>
+      </div>
+    </div>
+
+    <!-- KOSTEN -->
+    <div id="tab-kosten" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Kosten</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="openBudgetModal()">Budget instellen</button>
+          <button class="btn btn-primary" onclick="openModal('kost')">+ Uitgave toevoegen</button>
+        </div>
+      </div>
+      <div class="widget-grid" id="kosten-widgets" style="margin-bottom:20px"></div>
+      <div class="card" style="padding:18px 20px;margin-bottom:20px" id="budget-chart-wrap">
+        <div class="form-label" style="margin-bottom:8px">Budgetverdeling</div>
+        <div class="budget-chart" id="budget-chart"></div>
+        <div id="budget-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:0.75rem"></div>
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Omschrijving</th><th>Categorie</th><th>Ruimte</th><th>Bedrag</th><th>Datum</th><th>Acties</th></tr>
+          </thead>
+          <tbody id="kosten-tbody"></tbody>
+        </table>
+        <div id="kosten-empty" class="empty" style="display:none"><div class="empty-icon">💶</div>Geen uitgaven geregistreerd.</div>
+      </div>
+    </div>
+
+    <!-- LEVERANCIERS -->
+    <div id="tab-leveranciers" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Leveranciers & Contacten</div>
+        <button class="btn btn-primary" onclick="openModal('leverancier')">+ Toevoegen</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Naam</th><th>Bedrijf</th><th>Telefoon</th><th>Email</th><th>Specialisme</th><th>Status</th><th>Acties</th></tr>
+          </thead>
+          <tbody id="lev-tbody"></tbody>
+        </table>
+        <div id="lev-empty" class="empty" style="display:none"><div class="empty-icon">👷</div>Nog geen leveranciers toegevoegd.</div>
+      </div>
+    </div>
+
+    <!-- INSPIRATIE -->
+    <div id="tab-inspiratie" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Inspiratie & Links</div>
+        <button class="btn btn-primary" onclick="openModal('link')">+ Link opslaan</button>
+      </div>
+      <div class="link-grid" id="link-grid"></div>
+      <div id="link-empty" class="empty" style="display:none"><div class="empty-icon">🔗</div>Nog geen inspiratielinks opgeslagen.</div>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="tab-agenda" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Agenda</div>
+        <button class="btn btn-primary" onclick="openModal('agenda')">+ Agenda item</button>
+      </div>
+      <div class="agenda-list" id="agenda-list"></div>
+      <div id="agenda-empty" class="empty" style="display:none"><div class="empty-icon">📅</div>Geen agenda items gepland.</div>
+    </div>
+  </main>
+</div>
+
+<!-- ── MODALS ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Toevoegen</div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModalDirect()">Annuleren</button>
+      <button class="btn btn-primary" id="modal-save" onclick="saveModal()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUDGET MODAL -->
+<div class="modal-overlay" id="budget-modal-overlay" onclick="closeBudgetModal(event)">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-title">Budget instellen</div>
+      <button class="modal-close" onclick="closeBudgetModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Totaal budget (€)</label>
+        <input type="number" id="budget-input" class="form-input" placeholder="25000">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeBudgetModalDirect()">Annuleren</button>
+      <button class="btn btn-primary" onclick="saveBudget()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settings-overlay" onclick="closeSettings(event)">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <div class="modal-title">Instellingen</div>
+      <button class="modal-close" onclick="closeSettingsDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">GitHub Token</label>
+        <input type="password" id="settings-token" class="form-input" placeholder="ghp_xxxx">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Projectnaam</label>
+        <input type="text" id="settings-project" class="form-input" placeholder="Verbouwing 2025">
+      </div>
+      <div style="font-size:0.8rem;color:var(--text-muted)">Repo: jmjoosse/verbuilding</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeSettingsDirect()">Annuleren</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────────────────────
+const GITHUB_OWNER = 'jmjoosse';
+const GITHUB_REPO  = 'verbuilding';
+const DATA_FILE    = 'verbouwing-data.json';
+const CORRECT_PIN  = '3826';
+
+// ─────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────
+let data = {
+  taken: [], kosten: [], leveranciers: [], links: [], agenda: [],
+  budget: 0, project: 'Verbouwing'
+};
+let currentModal = null;
+let editIndex = null;
+let activeRuimteFilter = '';
+let githubToken = '';
+let githubSha = null; // SHA of current data file for updates
+
+// ─────────────────────────────────────────────────────────────
+// PINCODE
+// ─────────────────────────────────────────────────────────────
+let pinInput = '';
+const pinNumpad = document.getElementById('pin-numpad');
+[1,2,3,4,5,6,7,8,9,'',0,'⌫'].forEach(k => {
+  const b = document.createElement('button');
+  b.className = 'pin-btn' + (k === '⌫' ? ' del' : '');
+  b.textContent = k;
+  if (k === '') { b.style.visibility = 'hidden'; }
+  b.onclick = () => handlePin(k);
+  pinNumpad.appendChild(b);
+});
+
+function handlePin(k) {
+  if (k === '⌫') { pinInput = pinInput.slice(0,-1); }
+  else if (k !== '' && pinInput.length < 4) { pinInput += k; }
+  updatePinDots();
+  if (pinInput.length === 4) { checkPin(); }
+}
+
+function updatePinDots() {
+  document.querySelectorAll('.pin-dot').forEach((d,i) => {
+    d.classList.toggle('filled', i < pinInput.length);
+  });
+}
+
+function checkPin() {
+  if (pinInput === CORRECT_PIN) {
+    document.getElementById('pin-screen').style.display = 'none';
+    initApp();
+  } else {
+    document.getElementById('pin-error').textContent = 'Verkeerde pincode';
+    pinInput = '';
+    setTimeout(() => {
+      updatePinDots();
+      document.getElementById('pin-error').textContent = '';
+    }, 800);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+function initApp() {
+  githubToken = localStorage.getItem('gh_token') || '';
+  const localData = localStorage.getItem('verbouwing_data');
+  if (localData) { try { data = JSON.parse(localData); } catch(e){} }
+
+  if (!githubToken) {
+    document.getElementById('setup-screen').style.display = 'flex';
+  } else {
+    showApp();
+    syncFromGitHub();
+  }
+}
+
+function showApp() {
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  renderAll();
+}
+
+function saveSetup() {
+  const token = document.getElementById('setup-token').value.trim();
+  if (!token) { toast('Voer een token in'); return; }
+  githubToken = token;
+  localStorage.setItem('gh_token', token);
+  showApp();
+  syncFromGitHub();
+}
+
+function skipSetup() {
+  localStorage.setItem('gh_token', '');
+  githubToken = '';
+  showApp();
+}
+
+function openSettings() {
+  document.getElementById('settings-token').value = githubToken;
+  document.getElementById('settings-project').value = data.project || 'Verbouwing';
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings(e) { if(e.target.id==='settings-overlay') closeSettingsDirect(); }
+function closeSettingsDirect() { document.getElementById('settings-overlay').classList.remove('open'); }
+function saveSettings() {
+  githubToken = document.getElementById('settings-token').value.trim();
+  data.project = document.getElementById('settings-project').value.trim() || 'Verbouwing';
+  localStorage.setItem('gh_token', githubToken);
+  saveLocal(); closeSettingsDirect();
+  toast('Instellingen opgeslagen'); renderAll();
+  if (githubToken) syncToGitHub();
+}
+
+// ─────────────────────────────────────────────────────────────
+// GITHUB SYNC
+// ─────────────────────────────────────────────────────────────
+function setSyncStatus(state) {
+  const dot = document.getElementById('sync-dot');
+  const label = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + state;
+  const labels = { ok: 'Gesynchroniseerd', syncing: 'Bezig...', err: 'Fout', '': '—' };
+  label.textContent = labels[state] || '—';
+}
+
+async function syncFromGitHub() {
+  if (!githubToken) return;
+  setSyncStatus('syncing');
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
+      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (res.status === 404) { await syncToGitHub(); return; }
+    if (!res.ok) throw new Error('fetch failed');
+    const json = await res.json();
+    githubSha = json.sha;
+    const decoded = JSON.parse(atob(json.content.replace(/\n/g,'')));
+    data = decoded;
+    saveLocal(); renderAll();
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('err'); toast('Sync mislukt: ' + e.message); }
+}
+
+async function syncToGitHub() {
+  if (!githubToken) return;
+  setSyncStatus('syncing');
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const body = { message: 'Update verbouwing data', content };
+    if (githubSha) body.sha = githubSha;
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message); }
+    const result = await res.json();
+    githubSha = result.content.sha;
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('err'); toast('Opslaan mislukt: ' + e.message); }
+}
+
+function syncNow() { syncFromGitHub(); }
+
+function saveLocal() { localStorage.setItem('verbouwing_data', JSON.stringify(data)); }
+
+function save() { saveLocal(); if(githubToken) syncToGitHub(); }
+
+// ─────────────────────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'taken') renderTaken();
+  if (name === 'kosten') renderKosten();
+  if (name === 'leveranciers') renderLeveranciers();
+  if (name === 'inspiratie') renderLinks();
+  if (name === 'agenda') renderAgenda();
+}
+
+function renderAll() { renderDashboard(); renderTaken(); renderKosten(); renderLeveranciers(); renderLinks(); renderAgenda(); }
+
+// ─────────────────────────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const totalKosten = data.kosten.reduce((s,k) => s + parseFloat(k.bedrag||0), 0);
+  const budget = parseFloat(data.budget||0);
+  const resterend = budget - totalKosten;
+  const takenTotaal = data.taken.length;
+  const takenAfgerond = data.taken.filter(t => t.status === 'afgerond').length;
+  const pct = takenTotaal ? Math.round(takenAfgerond/takenTotaal*100) : 0;
+
+  document.getElementById('dash-widgets').innerHTML = `
+    <div class="widget">
+      <div class="widget-label">Voortgang taken</div>
+      <div class="widget-value accent">${pct}%</div>
+      <div class="widget-sub">${takenAfgerond} van ${takenTotaal} klaar</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+    </div>
+    <div class="widget">
+      <div class="widget-label">Totaal uitgegeven</div>
+      <div class="widget-value">€${fmt(totalKosten)}</div>
+      <div class="widget-sub">${budget ? 'van €'+fmt(budget)+' budget' : 'Geen budget ingesteld'}</div>
+      ${budget ? `<div class="progress-bar-wrap"><div class="progress-bar ${totalKosten>budget?'':'green'}" style="width:${Math.min(100,totalKosten/budget*100)}%"></div></div>` : ''}
+    </div>
+    <div class="widget">
+      <div class="widget-label">Resterend budget</div>
+      <div class="widget-value ${resterend < 0 ? 'red' : 'green'}">${budget ? '€'+fmt(resterend) : '—'}</div>
+      <div class="widget-sub">${budget ? (resterend < 0 ? '⚠️ Over budget' : 'Binnen budget') : 'Stel budget in bij Kosten'}</div>
+    </div>
+    <div class="widget">
+      <div class="widget-label">Leveranciers</div>
+      <div class="widget-value">${data.leveranciers.length}</div>
+      <div class="widget-sub">${data.leveranciers.filter(l=>l.status==='bevestigd').length} bevestigd</div>
+    </div>
+  `;
+
+  // Aankomende taken
+  const openTaken = data.taken.filter(t => t.status !== 'afgerond').slice(0,5);
+  document.getElementById('dash-taken').innerHTML = openTaken.length
+    ? openTaken.map(t => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span class="badge ${statusBadge(t.status)}">${t.status}</span>
+          <span style="font-size:0.875rem;flex:1">${t.naam}</span>
+          <span style="font-size:0.75rem;color:var(--text-muted)">${t.ruimte||''}</span>
+        </div>`).join('')
+    : '<div style="color:var(--text-muted);font-size:0.85rem;padding:8px 0">Geen open taken 🎉</div>';
+
+  // Aankomende agenda
+  const now = new Date(); const upcoming = data.agenda
+    .filter(a => new Date(a.datum) >= now)
+    .sort((a,b) => new Date(a.datum)-new Date(b.datum)).slice(0,4);
+  document.getElementById('dash-agenda').innerHTML = upcoming.length
+    ? upcoming.map(a => {
+        const d = new Date(a.datum);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="text-align:center;min-width:36px">
+            <div style="font-size:1.2rem;font-weight:700;color:var(--accent);line-height:1">${d.getDate()}</div>
+            <div style="font-size:0.65rem;color:var(--text-muted);text-transform:uppercase">${d.toLocaleString('nl',{month:'short'})}</div>
+          </div>
+          <div>
+            <div style="font-size:0.875rem;font-weight:600">${a.titel}</div>
+            <div style="font-size:0.75rem;color:var(--text-muted)">${a.tijd||''} ${a.persoon?'— '+a.persoon:''}</div>
+          </div>
+        </div>`;}).join('')
+    : '<div style="color:var(--text-muted);font-size:0.85rem;padding:8px 0">Geen aankomende items</div>';
+}
+
+// ─────────────────────────────────────────────────────────────
+// TAKEN
+// ─────────────────────────────────────────────────────────────
+const RUIMTES = ['Keuken','Badkamer','Woonkamer','Slaapkamer','Gang','Tuin','Zolder','Kelder','Overig'];
+
+function renderTaken() {
+  // Ruimte filter tabs
+  const ruimteSet = [...new Set(data.taken.map(t=>t.ruimte).filter(Boolean))];
+  const tabsHtml = ['Alles', ...RUIMTES.filter(r => ruimteSet.includes(r) || true)].map(r =>
+    `<button class="ruimte-tab ${activeRuimteFilter===(r==='Alles'?'':r)?'active':''}" onclick="setRuimteFilter('${r==='Alles'?'':r}')">${r}</button>`
+  ).join('');
+  document.getElementById('ruimte-tabs').innerHTML = tabsHtml;
+
+  // Update dropdown
+  const sel = document.getElementById('filter-ruimte');
+  sel.innerHTML = '<option value="">Alle ruimtes</option>' + RUIMTES.map(r=>`<option value="${r}" ${sel.value===r?'selected':''}>${r}</option>`).join('');
+
+  const filtered = activeRuimteFilter ? data.taken.filter(t => t.ruimte===activeRuimteFilter) : data.taken;
+
+  const tbody = document.getElementById('taken-tbody');
+  document.getElementById('taken-empty').style.display = filtered.length ? 'none' : 'block';
+  tbody.innerHTML = filtered.map((t,i) => {
+    const realIdx = data.taken.indexOf(t);
+    return `<tr>
+      <td><strong>${t.naam}</strong>${t.notities?`<br><span style="color:var(--text-muted);font-size:0.75rem">${t.notities}</span>`:''}
+        ${t.agendaRef ? '<br><span style="font-size:0.72rem;color:var(--accent)">📅 In agenda</span>' : ''}</td>
+      <td><span class="badge badge-gray">${t.ruimte||'—'}</span></td>
+      <td>${t.persoon||'—'}</td>
+      <td><span class="prio-${t.prioriteit||'middel'}">${(t.prioriteit||'middel').charAt(0).toUpperCase()+(t.prioriteit||'middel').slice(1)}</span></td>
+      <td>
+        <select class="form-select" style="font-size:0.78rem;padding:4px 8px" onchange="updateTaakStatus(${realIdx},this.value)">
+          ${['te doen','bezig','wacht op','afgerond'].map(s=>`<option ${t.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="editItem('taak',${realIdx})">✏️</button>
+        <button class="btn btn-ghost btn-sm" onclick="addToAgendaFromTaak(${realIdx})" title="Naar agenda">📅</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('taken',${realIdx})">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function setRuimteFilter(r) { activeRuimteFilter = r; renderTaken(); }
+
+function updateTaakStatus(idx, val) {
+  data.taken[idx].status = val; save(); renderDashboard();
+}
+
+// ─────────────────────────────────────────────────────────────
+// KOSTEN
+// ─────────────────────────────────────────────────────────────
+const KOSTEN_CATS = ['Materiaal','Arbeidskosten','Gereedschap','Vergunningen','Ontwerp','Diversen'];
+const CAT_COLORS  = ['#C17B3A','#2874A6','#3A7D44','#8E44AD','#C0392B','#717D7E'];
+
+function renderKosten() {
+  const total = data.kosten.reduce((s,k) => s+parseFloat(k.bedrag||0),0);
+  const budget = parseFloat(data.budget||0);
+  const resterend = budget - total;
+
+  document.getElementById('kosten-widgets').innerHTML = `
+    <div class="widget">
+      <div class="widget-label">Totaal uitgegeven</div>
+      <div class="widget-value accent">€${fmt(total)}</div>
+      <div class="widget-sub">${data.kosten.length} posten</div>
+    </div>
+    <div class="widget">
+      <div class="widget-label">Totaal budget</div>
+      <div class="widget-value">${budget ? '€'+fmt(budget) : '—'}</div>
+      <div class="widget-sub"><button class="btn btn-ghost btn-sm" onclick="openBudgetModal()">Aanpassen</button></div>
+    </div>
+    <div class="widget">
+      <div class="widget-label">Resterend</div>
+      <div class="widget-value ${resterend<0?'red':'green'}">${budget?'€'+fmt(resterend):'—'}</div>
+      <div class="widget-sub">${budget?(resterend<0?'⚠️ Over budget!':'✅ Binnen budget'):''}</div>
+    </div>
+  `;
+
+  // Budget chart by category
+  const catTotals = {};
+  KOSTEN_CATS.forEach(c => catTotals[c] = 0);
+  data.kosten.forEach(k => { catTotals[k.categorie||'Diversen'] = (catTotals[k.categorie||'Diversen']||0) + parseFloat(k.bedrag||0); });
+  const chartHtml = KOSTEN_CATS.map((c,i) => {
+    const pct = total ? catTotals[c]/total*100 : 0;
+    return pct > 0 ? `<div class="budget-segment" style="width:${pct}%;background:${CAT_COLORS[i]};border-radius:4px"></div>` : '';
+  }).join('');
+  document.getElementById('budget-chart').innerHTML = chartHtml || '<div style="width:100%;background:var(--border);border-radius:4px"></div>';
+  document.getElementById('budget-legend').innerHTML = KOSTEN_CATS.map((c,i) => catTotals[c]>0
+    ? `<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:${CAT_COLORS[i]};display:inline-block"></span>${c}: €${fmt(catTotals[c])}</span>` : '').join('');
+
+  const tbody = document.getElementById('kosten-tbody');
+  document.getElementById('kosten-empty').style.display = data.kosten.length ? 'none' : 'block';
+  const sorted = [...data.kosten].sort((a,b) => new Date(b.datum)-new Date(a.datum));
+  tbody.innerHTML = sorted.map((k) => {
+    const realIdx = data.kosten.indexOf(k);
+    return `<tr>
+      <td><strong>${k.omschrijving}</strong>${k.notities?`<br><span style="font-size:0.75rem;color:var(--text-muted)">${k.notities}</span>`:''}
+      ${k.leverancier?`<br><span style="font-size:0.72rem;color:var(--text-muted)">👷 ${k.leverancier}</span>`:''}</td>
+      <td><span class="badge" style="background:${CAT_COLORS[KOSTEN_CATS.indexOf(k.categorie)]||'#ccc'}22;color:${CAT_COLORS[KOSTEN_CATS.indexOf(k.categorie)]||'#888'}">${k.categorie||'—'}</span></td>
+      <td>${k.ruimte||'—'}</td>
+      <td style="font-weight:600;font-family:var(--mono)">€${fmt(parseFloat(k.bedrag||0))}</td>
+      <td style="color:var(--text-muted)">${k.datum||'—'}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="editItem('kost',${realIdx})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('kosten',${realIdx})">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openBudgetModal() {
+  document.getElementById('budget-input').value = data.budget || '';
+  document.getElementById('budget-modal-overlay').classList.add('open');
+}
+function closeBudgetModal(e) { if(e.target.id==='budget-modal-overlay') closeBudgetModalDirect(); }
+function closeBudgetModalDirect() { document.getElementById('budget-modal-overlay').classList.remove('open'); }
+function saveBudget() {
+  data.budget = parseFloat(document.getElementById('budget-input').value)||0;
+  save(); renderKosten(); renderDashboard(); closeBudgetModalDirect();
+  toast('Budget opgeslagen');
+}
+
+// ─────────────────────────────────────────────────────────────
+// LEVERANCIERS
+// ─────────────────────────────────────────────────────────────
+function renderLeveranciers() {
+  const tbody = document.getElementById('lev-tbody');
+  document.getElementById('lev-empty').style.display = data.leveranciers.length ? 'none' : 'block';
+  tbody.innerHTML = data.leveranciers.map((l,i) => `<tr>
+    <td><strong>${l.naam}</strong></td>
+    <td>${l.bedrijf||'—'}</td>
+    <td>${l.telefoon ? `<a href="tel:${l.telefoon}" style="color:var(--accent)">${l.telefoon}</a>` : '—'}</td>
+    <td>${l.email ? `<a href="mailto:${l.email}" style="color:var(--accent)">${l.email}</a>` : '—'}</td>
+    <td>${l.specialisme||'—'}</td>
+    <td><span class="badge ${levStatusBadge(l.status)}">${l.status||'onbekend'}</span></td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-ghost btn-sm" onclick="editItem('leverancier',${i})">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteItem('leveranciers',${i})">🗑</button>
+    </td>
+  </tr>`).join('');
+}
+
+function levStatusBadge(s) {
+  return {offerte:'badge-yellow',bevestigd:'badge-green',afgerond:'badge-blue',geannuleerd:'badge-red'}[s]||'badge-gray';
+}
+
+// ─────────────────────────────────────────────────────────────
+// LINKS
+// ─────────────────────────────────────────────────────────────
+function renderLinks() {
+  document.getElementById('link-empty').style.display = data.links.length ? 'none' : 'block';
+  document.getElementById('link-grid').innerHTML = data.links.map((l,i) => `
+    <div class="link-card">
+      <div class="link-card-title">${l.titel}</div>
+      ${l.omschrijving?`<div style="font-size:0.8rem;color:var(--text-muted)">${l.omschrijving}</div>`:''}
+      <a href="${l.url}" target="_blank" class="link-card-url">🔗 ${l.url}</a>
+      ${l.tag?`<span class="badge badge-accent link-card-tag">${l.tag}</span>`:''}
+      <div class="link-card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editItem('link',${i})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('links',${i})">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// AGENDA
+// ─────────────────────────────────────────────────────────────
+function renderAgenda() {
+  const sorted = [...data.agenda].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
+  document.getElementById('agenda-empty').style.display = sorted.length ? 'none' : 'block';
+  document.getElementById('agenda-list').innerHTML = sorted.map((a) => {
+    const realIdx = data.agenda.indexOf(a);
+    const d = new Date(a.datum);
+    const isPast = d < new Date();
+    return `<div class="agenda-item" style="${isPast?'opacity:0.6':''}">
+      <div class="agenda-date">
+        <div class="agenda-day">${d.getDate()}</div>
+        <div class="agenda-month">${d.toLocaleString('nl',{month:'short'})}</div>
+      </div>
+      <div class="agenda-content">
+        <div class="agenda-title">${a.titel}</div>
+        <div class="agenda-meta">
+          ${a.tijd?'🕐 '+a.tijd+' &nbsp;':''}
+          ${a.persoon?'👤 '+a.persoon+' &nbsp;':''}
+          ${a.ruimte?'📍 '+a.ruimte:''}
+          ${a.notities?'<br>'+a.notities:''}
+        </div>
+      </div>
+      ${isPast?'<span class="badge badge-gray">Verleden</span>':'<span class="badge badge-green">Gepland</span>'}
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="editItem('agenda',${realIdx})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('agenda',${realIdx})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addToAgendaFromTaak(idx) {
+  const t = data.taken[idx];
+  openModal('agenda', null, { titel: t.naam, persoon: t.persoon, ruimte: t.ruimte, _taakIdx: idx });
+}
+
+// ─────────────────────────────────────────────────────────────
+// MODAL SYSTEM
+// ─────────────────────────────────────────────────────────────
+const MODAL_CONFIGS = {
+  taak: {
+    title: 'Taak toevoegen',
+    editTitle: 'Taak bewerken',
+    fields: () => `
+      <div class="form-group"><label class="form-label">Taaknaam *</label><input class="form-input" id="f-naam" placeholder="Tegels leggen..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Ruimte</label>
+          <select class="form-select" id="f-ruimte">${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">Toegewezen aan</label>
+          <input class="form-input" id="f-persoon" placeholder="Naam"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prioriteit</label>
+          <select class="form-select" id="f-prioriteit"><option value="hoog">Hoog</option><option value="middel" selected>Middel</option><option value="laag">Laag</option></select></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select" id="f-status"><option>te doen</option><option>bezig</option><option>wacht op</option><option>afgerond</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Extra info..."></textarea></div>`,
+    get: () => ({ naam: v('naam'), ruimte: v('ruimte'), persoon: v('persoon'), prioriteit: v('prioriteit'), status: v('status'), notities: v('notities') }),
+    set: (obj) => { sv('naam',obj.naam); sv('ruimte',obj.ruimte); sv('persoon',obj.persoon); sv('prioriteit',obj.prioriteit); sv('status',obj.status); sv('notities',obj.notities); },
+    validate: (obj) => obj.naam,
+    list: 'taken'
+  },
+  kost: {
+    title: 'Uitgave toevoegen',
+    editTitle: 'Uitgave bewerken',
+    fields: () => `
+      <div class="form-group"><label class="form-label">Omschrijving *</label><input class="form-input" id="f-omschrijving" placeholder="Vloertegels badkamer..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Bedrag (€) *</label><input class="form-input" id="f-bedrag" type="number" step="0.01" placeholder="0.00"></div>
+        <div class="form-group"><label class="form-label">Datum</label><input class="form-input" id="f-datum" type="date"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Categorie</label>
+          <select class="form-select" id="f-categorie">${KOSTEN_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">Ruimte</label>
+          <select class="form-select" id="f-ruimte"><option value="">—</option>${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Leverancier</label>
+        <select class="form-select" id="f-leverancier"><option value="">—</option>${data.leveranciers.map(l=>`<option>${l.naam}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Factuur nr, link..."></textarea></div>`,
+    get: () => ({ omschrijving: v('omschrijving'), bedrag: v('bedrag'), datum: v('datum'), categorie: v('categorie'), ruimte: v('ruimte'), leverancier: v('leverancier'), notities: v('notities') }),
+    set: (obj) => { sv('omschrijving',obj.omschrijving); sv('bedrag',obj.bedrag); sv('datum',obj.datum); sv('categorie',obj.categorie); sv('ruimte',obj.ruimte); sv('leverancier',obj.leverancier); sv('notities',obj.notities); },
+    validate: (obj) => obj.omschrijving && obj.bedrag,
+    list: 'kosten'
+  },
+  leverancier: {
+    title: 'Leverancier toevoegen',
+    editTitle: 'Leverancier bewerken',
+    fields: () => `
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Naam *</label><input class="form-input" id="f-naam" placeholder="Jan de Vries"></div>
+        <div class="form-group"><label class="form-label">Bedrijf</label><input class="form-input" id="f-bedrijf" placeholder="Installatiebedrijf X"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Telefoon</label><input class="form-input" id="f-telefoon" placeholder="06-12345678" type="tel"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" placeholder="jan@voorbeeld.nl" type="email"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Specialisme</label><input class="form-input" id="f-specialisme" placeholder="Loodgieter, Tegelzetter..."></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select" id="f-status"><option value="offerte">Offerte gevraagd</option><option value="bevestigd">Bevestigd</option><option value="afgerond">Afgerond</option><option value="geannuleerd">Geannuleerd</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Offerte bedrag, referentie..."></textarea></div>`,
+    get: () => ({ naam: v('naam'), bedrijf: v('bedrijf'), telefoon: v('telefoon'), email: v('email'), specialisme: v('specialisme'), status: v('status'), notities: v('notities') }),
+    set: (obj) => { sv('naam',obj.naam); sv('bedrijf',obj.bedrijf); sv('telefoon',obj.telefoon); sv('email',obj.email); sv('specialisme',obj.specialisme); sv('status',obj.status); sv('notities',obj.notities); },
+    validate: (obj) => obj.naam,
+    list: 'leveranciers'
+  },
+  link: {
+    title: 'Link opslaan',
+    editTitle: 'Link bewerken',
+    fields: () => `
+      <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="f-titel" placeholder="Moodboard badkamer"></div>
+      <div class="form-group"><label class="form-label">URL *</label><input class="form-input" id="f-url" placeholder="https://..." type="url"></div>
+      <div class="form-group"><label class="form-label">Omschrijving</label><input class="form-input" id="f-omschrijving" placeholder="Korte beschrijving..."></div>
+      <div class="form-group"><label class="form-label">Tag / Ruimte</label><input class="form-input" id="f-tag" placeholder="Badkamer, Inspiratie..."></div>`,
+    get: () => ({ titel: v('titel'), url: v('url'), omschrijving: v('omschrijving'), tag: v('tag') }),
+    set: (obj) => { sv('titel',obj.titel); sv('url',obj.url); sv('omschrijving',obj.omschrijving); sv('tag',obj.tag); },
+    validate: (obj) => obj.titel && obj.url,
+    list: 'links'
+  },
+  agenda: {
+    title: 'Agenda item toevoegen',
+    editTitle: 'Agenda item bewerken',
+    fields: () => `
+      <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="f-titel" placeholder="Afspraak tegelzetter..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Datum *</label><input class="form-input" id="f-datum" type="date"></div>
+        <div class="form-group"><label class="form-label">Tijd</label><input class="form-input" id="f-tijd" type="time"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Persoon / Leverancier</label><input class="form-input" id="f-persoon" placeholder="Naam..."></div>
+        <div class="form-group"><label class="form-label">Ruimte / Locatie</label>
+          <select class="form-select" id="f-ruimte"><option value="">—</option>${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Extra info..."></textarea></div>`,
+    get: () => ({ titel: v('titel'), datum: v('datum'), tijd: v('tijd'), persoon: v('persoon'), ruimte: v('ruimte'), notities: v('notities') }),
+    set: (obj) => { sv('titel',obj.titel); sv('datum',obj.datum); sv('tijd',obj.tijd); sv('persoon',obj.persoon); sv('ruimte',obj.ruimte); sv('notities',obj.notities); },
+    validate: (obj) => obj.titel && obj.datum,
+    list: 'agenda'
+  }
+};
+
+function v(id) { const el = document.getElementById('f-'+id); return el ? el.value.trim() : ''; }
+function sv(id, val) { const el = document.getElementById('f-'+id); if(el && val!==undefined) el.value = val||''; }
+
+function openModal(type, idx = null, prefill = null) {
+  currentModal = type; editIndex = idx;
+  const cfg = MODAL_CONFIGS[type];
+  document.getElementById('modal-title').textContent = idx !== null ? cfg.editTitle : cfg.title;
+  document.getElementById('modal-body').innerHTML = cfg.fields();
+
+  // Set today's date for date fields if new
+  const dateEl = document.getElementById('f-datum');
+  if (dateEl && idx === null && !prefill?.datum) dateEl.value = new Date().toISOString().split('T')[0];
+
+  if (idx !== null) { cfg.set(data[cfg.list][idx]); }
+  if (prefill) { Object.entries(prefill).forEach(([k,val]) => { if(k!=='_taakIdx') sv(k.replace('f-',''),val); }); }
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function editItem(type, idx) { openModal(type, idx); }
+
+function closeModal(e) { if(e.target.id==='modal-overlay') closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); currentModal=null; editIndex=null; }
+
+function saveModal() {
+  const cfg = MODAL_CONFIGS[currentModal];
+  const obj = cfg.get();
+  if (!cfg.validate(obj)) { toast('Vul verplichte velden in'); return; }
+
+  if (editIndex !== null) { data[cfg.list][editIndex] = obj; }
+  else { data[cfg.list].push(obj); }
+
+  save(); closeModalDirect();
+  renderAll();
+  toast(editIndex !== null ? 'Opgeslagen ✓' : 'Toegevoegd ✓');
+}
+
+function deleteItem(list, idx) {
+  if (!confirm('Weet je het zeker?')) return;
+  data[list].splice(idx, 1); save(); renderAll(); toast('Verwijderd');
+}
+
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+function fmt(n) { return Number(n).toLocaleString('nl-NL', {minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function statusBadge(s) {
+  return {'te doen':'badge-gray','bezig':'badge-yellow','wacht op':'badge-blue','afgerond':'badge-green'}[s]||'badge-gray';
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
