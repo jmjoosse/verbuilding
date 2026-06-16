@@ -25,7 +25,6 @@
     --blue-light: #D4E6F1;
     --yellow: #B7770D;
     --yellow-light: #FEF9E7;
-    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
     --radius: 10px;
     --font: 'DM Sans', sans-serif;
     --mono: 'DM Mono', monospace;
@@ -34,305 +33,190 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* ── PINCODE SCREEN ─────────────────────────────────────── */
-  #pin-screen {
-    position: fixed; inset: 0; background: var(--text);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 999; gap: 32px;
-  }
-  #pin-screen h1 { color: #fff; font-size: 1.4rem; font-weight: 500; letter-spacing: 0.02em; }
-  #pin-screen .pin-subtitle { color: var(--text-muted); font-size: 0.85rem; }
-  .pin-dots { display: flex; gap: 14px; }
-  .pin-dot {
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid #555; background: transparent; transition: background 0.15s;
-  }
-  .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
-  .pin-numpad { display: grid; grid-template-columns: repeat(3, 64px); gap: 12px; }
-  .pin-btn {
-    width: 64px; height: 64px; border-radius: 50%; border: none;
-    background: #2A2825; color: #fff; font-family: var(--font); font-size: 1.3rem;
-    cursor: pointer; transition: background 0.15s; user-select: none;
-  }
-  .pin-btn:hover { background: #3A3733; }
-  .pin-btn.del { font-size: 1rem; color: var(--text-muted); }
-  #pin-error { color: var(--red); font-size: 0.85rem; min-height: 1.2em; }
+  /* PIN */
+  #pin-screen { position:fixed;inset:0;background:#1C1A17;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:28px; }
+  #pin-screen h1 { color:#fff;font-size:1.3rem;font-weight:500; }
+  .pin-subtitle { color:#666;font-size:0.82rem; }
+  .pin-dots { display:flex;gap:14px; }
+  .pin-dot { width:13px;height:13px;border-radius:50%;border:2px solid #444;background:transparent;transition:background .15s; }
+  .pin-dot.filled { background:var(--accent);border-color:var(--accent); }
+  .pin-numpad { display:grid;grid-template-columns:repeat(3,62px);gap:11px; }
+  .pin-btn { width:62px;height:62px;border-radius:50%;border:none;background:#2A2825;color:#fff;font-family:var(--font);font-size:1.25rem;cursor:pointer;transition:background .15s;user-select:none; }
+  .pin-btn:hover { background:#3A3733; }
+  #pin-error { color:var(--red);font-size:0.82rem;min-height:1.1em; }
 
-  /* ── SETUP SCREEN ───────────────────────────────────────── */
-  #setup-screen {
-    position: fixed; inset: 0; background: var(--bg);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 998; padding: 24px; gap: 20px;
-  }
-  #setup-screen h2 { font-size: 1.3rem; font-weight: 600; }
-  #setup-screen p { color: var(--text-muted); font-size: 0.9rem; text-align: center; max-width: 420px; line-height: 1.6; }
-  .setup-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 14px; }
-  .setup-card label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-  .setup-card input {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
-    font-family: var(--mono); font-size: 0.85rem; background: var(--bg); color: var(--text);
-  }
-  .setup-card input:focus { outline: none; border-color: var(--accent); }
-  .note-box { background: var(--accent-light); border-radius: 8px; padding: 12px 14px; font-size: 0.82rem; color: var(--accent-dark); line-height: 1.5; }
+  /* SETUP */
+  #setup-screen { position:fixed;inset:0;background:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:998;padding:24px;gap:20px; }
+  #setup-screen h2 { font-size:1.2rem;font-weight:600; }
+  #setup-screen p { color:var(--text-muted);font-size:0.88rem;text-align:center;max-width:400px;line-height:1.6; }
+  .setup-card { background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px;width:100%;max-width:420px;display:flex;flex-direction:column;gap:13px; }
+  .note-box { background:var(--accent-light);border-radius:8px;padding:11px 13px;font-size:0.8rem;color:var(--accent-dark);line-height:1.5; }
 
-  /* ── APP SHELL ──────────────────────────────────────────── */
-  #app { display: none; min-height: 100vh; }
+  /* APP */
+  #app { display:none;min-height:100vh; }
+  header { background:#fff;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:flex-end;height:50px;position:sticky;top:0;z-index:100; }
+  .header-actions { display:flex;align-items:center;gap:12px; }
+  .sync-status { font-size:0.73rem;color:var(--text-muted);display:flex;align-items:center;gap:5px; }
+  .sync-dot { width:7px;height:7px;border-radius:50%;background:#ccc; }
+  .sync-dot.ok { background:#4CAF50; }
+  .sync-dot.syncing { background:var(--accent);animation:pulse 1s infinite; }
+  .sync-dot.err { background:var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+  .btn-icon { background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;border-radius:6px;transition:color .15s;font-size:1rem; }
+  .btn-icon:hover { color:var(--text); }
 
-  header {
-    background: #fff; color: var(--text); padding: 0 32px;
-    display: flex; align-items: center; justify-content: flex-end; height: 52px;
-    position: sticky; top: 0; z-index: 100;
-    border-bottom: 1px solid var(--border);
-  }
-  .header-logo { display: none; }
-  .header-actions { display: flex; align-items: center; gap: 12px; }
-  .sync-status { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
-  .sync-dot.ok { background: #4CAF50; }
-  .sync-dot.syncing { background: var(--accent); animation: pulse 1s infinite; }
-  .sync-dot.err { background: var(--red); }
-  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
-  .btn-icon { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 6px; border-radius: 6px; transition: color 0.15s; font-size: 1rem; }
-  .btn-icon:hover { color: var(--text); }
+  nav { background:#fff;border-bottom:1px solid var(--border);display:flex;padding:0 32px;overflow-x:auto; }
+  .nav-tab { padding:13px 16px;font-size:0.875rem;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;font-family:var(--font); }
+  .nav-tab:hover { color:var(--text); }
+  .nav-tab.active { color:var(--accent);border-bottom-color:var(--accent); }
 
-  nav {
-    background: #fff; border-bottom: 1px solid var(--border);
-    display: flex; gap: 0; padding: 0 32px; overflow-x: auto;
-  }
-  .nav-tab {
-    padding: 14px 18px; font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
-    border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent;
-    transition: all 0.15s; white-space: nowrap;
-  }
-  .nav-tab:hover { color: var(--text); }
-  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  main { padding:32px;max-width:1200px;margin:0 auto; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
 
-  main { padding: 32px; max-width: 1100px; margin: 0 auto; }
+  /* WIDGETS */
+  .widget-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:26px; }
+  .widget { background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px; }
+  .widget-label { font-size:0.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px; }
+  .widget-value { font-size:1.8rem;font-weight:600;line-height:1; }
+  .widget-value.accent { color:var(--accent); }
+  .widget-value.green { color:var(--green); }
+  .widget-value.red { color:var(--red); }
+  .widget-sub { font-size:0.78rem;color:var(--text-muted);margin-top:5px; }
+  .progress-bar-wrap { background:var(--border);border-radius:99px;height:7px;margin-top:9px;overflow:hidden; }
+  .progress-bar { height:100%;border-radius:99px;background:var(--accent);transition:width .5s; }
+  .progress-bar.green { background:var(--green); }
 
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+  /* CARDS */
+  .section-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px; }
+  .section-title { font-size:1rem;font-weight:600; }
+  .btn { padding:8px 15px;border-radius:8px;border:none;font-family:var(--font);font-size:0.84rem;font-weight:500;cursor:pointer;transition:all .15s; }
+  .btn-primary { background:var(--accent);color:#fff; }
+  .btn-primary:hover { background:var(--accent-dark); }
+  .btn-ghost { background:var(--surface2);color:var(--text);border:1px solid var(--border); }
+  .btn-ghost:hover { border-color:var(--accent);color:var(--accent); }
+  .btn-danger { background:var(--red-light);color:var(--red);border:1px solid transparent; }
+  .btn-danger:hover { background:var(--red);color:#fff; }
+  .btn-print { background:var(--surface2);color:var(--text-muted);border:1px solid var(--border); }
+  .btn-print:hover { color:var(--text);border-color:#aaa; }
+  .btn-sm { padding:4px 9px;font-size:0.76rem; }
 
-  /* ── WIDGETS / DASHBOARD ────────────────────────────────── */
-  .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
-  .widget {
-    background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px; box-shadow: none;
-  }
-  .widget-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-  .widget-value { font-size: 1.9rem; font-weight: 600; color: var(--text); line-height: 1; }
-  .widget-value.accent { color: var(--accent); }
-  .widget-value.green { color: var(--green); }
-  .widget-value.red { color: var(--red); }
-  .widget-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+  .card { background:#fff;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:18px;overflow:hidden; }
+  table { width:100%;border-collapse:collapse; }
+  th { text-align:left;font-size:0.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;padding:8px 12px;border-bottom:1px solid var(--border); }
+  td { padding:11px 12px;border-bottom:1px solid var(--border);font-size:0.875rem;vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:var(--surface); }
 
-  .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; margin-top: 10px; overflow: hidden; }
-  .progress-bar { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.5s ease; }
-  .progress-bar.green { background: var(--green); }
+  /* BADGES */
+  .badge { display:inline-block;padding:2px 8px;border-radius:99px;font-size:0.7rem;font-weight:600; }
+  .badge-green { background:var(--green-light);color:var(--green); }
+  .badge-red { background:var(--red-light);color:var(--red); }
+  .badge-yellow { background:var(--yellow-light);color:var(--yellow); }
+  .badge-blue { background:var(--blue-light);color:var(--blue); }
+  .badge-gray { background:var(--surface2);color:var(--text-muted); }
+  .badge-accent { background:var(--accent-light);color:var(--accent-dark); }
+  .badge-overtijd { background:#FEE2E2;color:#991B1B;border:1px solid #FECACA; }
 
-  /* ── CARDS / SECTIONS ───────────────────────────────────── */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .section-title { font-size: 1.05rem; font-weight: 600; }
-  .btn {
-    padding: 8px 16px; border-radius: 8px; border: none; font-family: var(--font);
-    font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent-dark); }
-  .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger { background: var(--red-light); color: var(--red); border: 1px solid transparent; }
-  .btn-danger:hover { background: var(--red); color: #fff; }
-  .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+  /* KLEUR DOTS */
+  .kleur-dot { display:inline-block;width:10px;height:10px;border-radius:50%;flex-shrink:0; }
 
-  table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
-  td { padding: 12px 12px; border-bottom: 1px solid var(--border); font-size: 0.875rem; vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--bg); }
+  /* MODAL */
+  .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:500;padding:20px; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:#fff;border-radius:14px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.18); }
+  .modal-header { padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+  .modal-title { font-size:0.95rem;font-weight:600; }
+  .modal-close { background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--text-muted);padding:4px; }
+  .modal-body { padding:18px 22px;display:flex;flex-direction:column;gap:13px; }
+  .modal-footer { padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end; }
+  .form-group { display:flex;flex-direction:column;gap:5px; }
+  .form-label { font-size:0.76rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em; }
+  .form-input,.form-select,.form-textarea { padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:0.875rem;color:var(--text);background:#fff;transition:border-color .15s; }
+  .form-input:focus,.form-select:focus,.form-textarea:focus { outline:none;border-color:var(--accent); }
+  .form-textarea { min-height:72px;resize:vertical; }
+  .form-row { display:grid;grid-template-columns:1fr 1fr;gap:11px; }
+  .form-row-3 { display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px; }
 
-  .card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: none; margin-bottom: 20px; overflow: hidden; }
+  /* KLEUR PICKER */
+  .kleur-picker { display:flex;gap:8px;flex-wrap:wrap;align-items:center; }
+  .kleur-opt { width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border-color .15s; }
+  .kleur-opt.selected { border-color:var(--text); }
 
-  /* ── BADGES ─────────────────────────────────────────────── */
-  .badge { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; }
-  .badge-green { background: var(--green-light); color: var(--green); }
-  .badge-red { background: var(--red-light); color: var(--red); }
-  .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
-  .badge-blue { background: var(--blue-light); color: var(--blue); }
-  .badge-gray { background: var(--surface2); color: var(--text-muted); }
-  .badge-accent { background: var(--accent-light); color: var(--accent-dark); }
+  /* FILTER CHIPS */
+  .filter-chips { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px; }
+  .chip { padding:5px 12px;border-radius:99px;border:1px solid var(--border);background:#fff;font-size:0.8rem;cursor:pointer;transition:all .15s;font-family:var(--font); }
+  .chip:hover { border-color:var(--accent);color:var(--accent); }
+  .chip.active { background:var(--accent);color:#fff;border-color:var(--accent); }
 
-  /* ── PRIORITY ────────────────────────────────────────────── */
-  .prio-hoog { color: var(--red); font-weight: 600; }
-  .prio-middel { color: var(--yellow); font-weight: 600; }
-  .prio-laag { color: var(--green); font-weight: 600; }
+  /* OVERTIJD ROW */
+  .row-overtijd td { background:#FFF5F5 !important; }
 
-  /* ── FORMS / MODALS ──────────────────────────────────────── */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    display: none; align-items: center; justify-content: center; z-index: 500; padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface); border-radius: 14px; width: 100%; max-width: 520px;
-    max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  }
-  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .modal-title { font-size: 1rem; font-weight: 600; }
-  .modal-close { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); padding: 4px; }
-  .modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
-  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+  /* TIJDLIJN */
+  .tl-label-col { min-width:180px;width:180px;flex-shrink:0; }
+  .tl-day-header { text-align:center;font-size:0.67rem;border-left:1px solid var(--border);flex-shrink:0;padding:3px 0; }
+  .tl-day-header.today { color:var(--accent);font-weight:700; }
+  .tl-day-header.weekend { color:#ccc; }
+  .tl-row { display:flex;align-items:center;min-height:36px;border-bottom:1px solid var(--border); }
+  .tl-row:last-child { border-bottom:none; }
+  .tl-row-label { min-width:180px;width:180px;flex-shrink:0;padding:5px 10px 5px 0;font-size:0.8rem;line-height:1.3; }
+  .tl-row-label strong { display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:175px; }
+  .tl-row-label span { font-size:0.68rem;color:var(--text-muted); }
+  .tl-row-track { flex:1;position:relative;height:36px; }
+  .tl-day-bg { position:absolute;top:0;bottom:0;border-left:1px solid var(--border); }
+  .tl-day-bg.weekend { background:var(--surface2); }
+  .tl-day-bg.today-col { border-left:2px solid var(--accent); }
+  .tl-bar { position:absolute;top:7px;bottom:7px;border-radius:5px;display:flex;align-items:center;padding:0 7px;font-size:0.7rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;transition:filter .15s;z-index:2; }
+  .tl-bar:hover { filter:brightness(1.12);z-index:10; }
+  .tl-bar.overtijd { outline:2px solid var(--red);outline-offset:1px; }
+  .tl-overlap-warn { position:absolute;top:0;bottom:0;background:rgba(192,57,43,.07);border-top:2px dashed var(--red);border-bottom:2px dashed var(--red);pointer-events:none;z-index:1; }
+  .tl-today-line { position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--accent);opacity:.4;z-index:5;pointer-events:none; }
+  .overlap-badge { display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--red-light);color:var(--red);border-radius:99px;font-size:0.73rem;font-weight:600;margin:0 6px 8px 0; }
 
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-  .form-input, .form-select, .form-textarea {
-    padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
-    font-family: var(--font); font-size: 0.875rem; color: var(--text); background: #fff;
-    transition: border-color 0.15s;
-  }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); background: #fff; }
-  .form-textarea { min-height: 80px; resize: vertical; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* OVERZICHT PRINT */
+  .overzicht-section { margin-bottom:28px; }
+  .overzicht-section-title { font-size:0.85rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);padding-bottom:6px;margin-bottom:12px; }
 
-  /* ── RUIMTES ─────────────────────────────────────────────── */
-  .ruimte-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .ruimte-tab {
-    padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border);
-    background: var(--surface); font-size: 0.82rem; cursor: pointer; transition: all 0.15s;
-    font-family: var(--font);
-  }
-  .ruimte-tab:hover { border-color: var(--accent); color: var(--accent); }
-  .ruimte-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  /* EMPTY */
+  .empty { text-align:center;padding:44px 20px;color:var(--text-muted);font-size:0.88rem; }
+  .empty-icon { font-size:2.2rem;margin-bottom:10px; }
 
-  /* ── INSPIRATIE LINKS ────────────────────────────────────── */
-  .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-  .link-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 16px; display: flex; flex-direction: column; gap: 8px;
-    box-shadow: var(--shadow); transition: border-color 0.15s;
-  }
-  .link-card:hover { border-color: var(--accent); }
-  .link-card-title { font-weight: 600; font-size: 0.9rem; }
-  .link-card-url { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; }
-  .link-card-url:hover { color: var(--accent); }
-  .link-card-tag { font-size: 0.72rem; }
-  .link-card-actions { display: flex; gap: 8px; margin-top: 4px; }
+  /* TOAST */
+  #toast { position:fixed;bottom:22px;right:22px;background:var(--text);color:#fff;padding:11px 17px;border-radius:9px;font-size:0.83rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all .22s;pointer-events:none; }
+  #toast.show { transform:translateY(0);opacity:1; }
 
-  /* ── AGENDA ──────────────────────────────────────────────── */
-  .agenda-list { display: flex; flex-direction: column; gap: 10px; }
-  .agenda-item {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 14px 16px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow);
-  }
-  .agenda-date { text-align: center; min-width: 48px; }
-  .agenda-day { font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
-  .agenda-month { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-  .agenda-content { flex: 1; }
-  .agenda-title { font-weight: 600; font-size: 0.9rem; }
-  .agenda-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-
-  /* ── EMPTY STATE ──────────────────────────────────────────── */
-  .empty { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 0.9rem; }
-  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-
-  /* ── TOAST ───────────────────────────────────────────────── */
-  #toast {
-    position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff;
-    padding: 12px 18px; border-radius: 10px; font-size: 0.85rem; z-index: 9999;
-    transform: translateY(100px); opacity: 0; transition: all 0.25s; pointer-events: none;
-  }
-  #toast.show { transform: translateY(0); opacity: 1; }
-
-  /* ── BUDGET CHART ─────────────────────────────────────────── */
-  .budget-chart { display: flex; height: 24px; border-radius: 8px; overflow: hidden; margin-top: 8px; gap: 2px; }
-  .budget-segment { height: 100%; transition: width 0.5s ease; }
-
-  /* ── TIJDLIJN ─────────────────────────────────────────────── */
-  .tl-grid { display: grid; gap: 0; }
-  .tl-header-row { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 4px; }
-  .tl-label-col { min-width: 160px; width: 160px; flex-shrink: 0; padding: 6px 0; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-  .tl-days-wrap { flex: 1; display: flex; position: relative; }
-  .tl-day-header { text-align: center; font-size: 0.7rem; color: var(--text-muted); padding: 4px 0; border-left: 1px solid var(--border); flex-shrink: 0; }
-  .tl-day-header.today { color: var(--accent); font-weight: 700; }
-  .tl-day-header.weekend { color: #ccc; }
-
-  .tl-row { display: flex; align-items: center; min-height: 38px; border-bottom: 1px solid var(--border); }
-  .tl-row:last-child { border-bottom: none; }
-  .tl-row-label { min-width: 160px; width: 160px; flex-shrink: 0; padding: 6px 8px 6px 0; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tl-row-label strong { display: block; }
-  .tl-row-label span { font-size: 0.72rem; color: var(--text-muted); }
-  .tl-row-track { flex: 1; position: relative; height: 38px; }
-  .tl-day-bg { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--border); }
-  .tl-day-bg.today { border-left: 2px solid var(--accent); }
-  .tl-day-bg.weekend { background: var(--surface2); }
-
-  .tl-bar {
-    position: absolute; top: 8px; bottom: 8px;
-    border-radius: 6px; display: flex; align-items: center;
-    padding: 0 8px; font-size: 0.72rem; font-weight: 600; color: #fff;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    cursor: default; transition: filter 0.15s; min-width: 6px;
-  }
-  .tl-bar:hover { filter: brightness(1.1); z-index: 10; }
-  .tl-bar.point {
-    width: 22px !important; left: unset; border-radius: 50%;
-    padding: 0; justify-content: center; font-size: 0.9rem;
-  }
-  .tl-overlap-warn {
-    position: absolute; top: 0; bottom: 0; background: rgba(192,57,43,0.08);
-    border-top: 2px dashed var(--red); border-bottom: 2px dashed var(--red);
-    pointer-events: none; z-index: 1;
-  }
-  .tl-today-line {
-    position: absolute; top: -4px; bottom: -4px;
-    width: 2px; background: var(--accent); opacity: 0.5; z-index: 5; pointer-events: none;
-  }
-  .tl-overlap-badge {
-    display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
-    background: var(--red-light); color: var(--red); border-radius: 99px;
-    font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; margin-right: 8px;
-  }
-
-  /* ── PRINT ────────────────────────────────────────────────── */
-  .btn-print { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
-  .btn-print:hover { border-color: var(--text-muted); color: var(--text); }
-
+  /* PRINT */
   @media print {
-    #pin-screen, #setup-screen, header, nav, .section-header .btn,
-    .btn-print, .btn-danger, .btn-ghost, .modal-overlay,
-    #toast, .ruimte-tabs, #filter-ruimte { display: none !important; }
-    body { background: #fff; }
-    main { padding: 0; max-width: 100%; }
-    .tab-content { display: block !important; }
-    .card { border: 1px solid #ddd; box-shadow: none; page-break-inside: avoid; }
-    .widget { border: 1px solid #ddd; }
-    td select { appearance: none; border: none; background: none; padding: 0; font-size: 0.875rem; }
-    .print-section { display: block !important; }
-    .no-print { display: none !important; }
+    #pin-screen,#setup-screen,header,nav,.section-header .btn,.btn-print,.btn-danger,.btn-ghost,.btn-primary,.modal-overlay,#toast,.filter-chips,.chip { display:none !important; }
+    body { background:#fff; }
+    main { padding:0;max-width:100%; }
+    .tab-content { display:block !important; }
+    .card { border:1px solid #ddd;box-shadow:none;page-break-inside:avoid; }
+    td select { appearance:none;border:none;background:none;padding:0;font-size:0.875rem; }
   }
 
-  @media (max-width: 640px) {
-    main { padding: 16px; }
-    .form-row { grid-template-columns: 1fr; }
-    nav { padding: 0 12px; }
-    header { padding: 0 16px; }
+  @media (max-width:640px) {
+    main { padding:16px; }
+    .form-row,.form-row-3 { grid-template-columns:1fr; }
+    nav,header { padding:0 14px; }
+    .tl-label-col,.tl-row-label { min-width:110px;width:110px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ── PIN SCREEN ── -->
+<!-- PIN -->
 <div id="pin-screen">
   <h1>🏗️ Verbouwing</h1>
   <p class="pin-subtitle">Voer je pincode in</p>
   <div class="pin-dots" id="pin-dots">
-    <div class="pin-dot"></div><div class="pin-dot"></div>
-    <div class="pin-dot"></div><div class="pin-dot"></div>
+    <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
   </div>
   <div class="pin-numpad" id="pin-numpad"></div>
   <div id="pin-error"></div>
 </div>
 
-<!-- ── SETUP SCREEN ── -->
+<!-- SETUP -->
 <div id="setup-screen">
   <h2>🔗 GitHub koppelen</h2>
   <p>Je data wordt opgeslagen in je GitHub repo zodat alles gesynchroniseerd blijft op elk apparaat.</p>
@@ -341,78 +225,94 @@
       <label class="form-label">GitHub Personal Access Token</label>
       <input type="password" id="setup-token" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
     </div>
-    <div class="note-box">
-      💡 Maak een token aan via <strong>github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong>. Selecteer de <strong>repo</strong> scope. Wordt alleen lokaal opgeslagen en alleen gebruikt voor jouw repo.
-    </div>
+    <div class="note-box">💡 Maak aan via <strong>github.com → Settings → Developer settings → Personal access tokens (classic)</strong>. Selecteer <strong>repo</strong> scope.</div>
     <button class="btn btn-primary" onclick="saveSetup()">Verbinding testen & opslaan</button>
     <button class="btn btn-ghost" onclick="skipSetup()">Overslaan (alleen lokaal)</button>
   </div>
 </div>
 
-<!-- ── APP ── -->
+<!-- APP -->
 <div id="app">
   <header>
-    <div class="header-logo">🏗️ <span>Verbouwing</span></div>
     <div class="header-actions">
-      <div class="sync-status">
-        <div class="sync-dot" id="sync-dot"></div>
-        <span id="sync-label">—</span>
-      </div>
-      <button class="btn-icon" title="Nu synchroniseren" onclick="syncNow()">↻</button>
+      <div class="sync-status"><div class="sync-dot" id="sync-dot"></div><span id="sync-label">—</span></div>
+      <button class="btn-icon" title="Synchroniseren" onclick="syncNow()">↻</button>
       <button class="btn-icon" title="Instellingen" onclick="openSettings()">⚙</button>
     </div>
   </header>
-
   <nav>
     <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
-    <button class="nav-tab" onclick="showTab('taken')">Taken</button>
+    <button class="nav-tab" onclick="showTab('taken')">Taken & Planning</button>
+    <button class="nav-tab" onclick="showTab('tijdlijn')">Tijdlijn</button>
     <button class="nav-tab" onclick="showTab('kosten')">Kosten</button>
     <button class="nav-tab" onclick="showTab('leveranciers')">Leveranciers</button>
     <button class="nav-tab" onclick="showTab('inspiratie')">Inspiratie</button>
-    <button class="nav-tab" onclick="showTab('agenda')">Agenda</button>
-    <button class="nav-tab" onclick="showTab('tijdlijn')">Tijdlijn</button>
+    <button class="nav-tab" onclick="showTab('overzicht')">📋 Overzicht</button>
   </nav>
 
   <main>
     <!-- DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
       <div class="widget-grid" id="dash-widgets"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="dash-grids">
-        <div class="card" style="padding:20px">
-          <div class="section-title" style="margin-bottom:14px">📋 Aankomende taken</div>
-          <div id="dash-taken"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div class="card" style="padding:18px">
+          <div class="section-title" style="margin-bottom:12px">🔴 Overtijd & urgent</div>
+          <div id="dash-overtijd"></div>
         </div>
-        <div class="card" style="padding:20px">
-          <div class="section-title" style="margin-bottom:14px">📅 Aankomende agenda</div>
-          <div id="dash-agenda"></div>
+        <div class="card" style="padding:18px">
+          <div class="section-title" style="margin-bottom:12px">📅 Aankomend (7 dagen)</div>
+          <div id="dash-aankomend"></div>
         </div>
       </div>
     </div>
 
-    <!-- TAKEN -->
+    <!-- TAKEN & PLANNING -->
     <div id="tab-taken" class="tab-content">
       <div class="section-header">
-        <div class="section-title">Taken</div>
-        <div style="display:flex;gap:8px">
-          <select class="form-select" id="filter-ruimte" onchange="renderTaken()" style="font-size:0.8rem;padding:6px 10px">
-            <option value="">Alle ruimtes</option>
-          </select>
+        <div class="section-title">Taken & Planning</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-print" onclick="printSection('taken')">🖨 Printen</button>
-          <button class="btn btn-primary" onclick="openModal('taak')">+ Taak toevoegen</button>
+          <button class="btn btn-primary" onclick="openTaakModal()">+ Taak toevoegen</button>
         </div>
       </div>
-      <div class="ruimte-tabs" id="ruimte-tabs"></div>
+      <div class="filter-chips" id="taken-filter-chips"></div>
       <div class="card">
         <table>
-          <thead>
-            <tr>
-              <th>Taak</th><th>Ruimte</th><th>Toegewezen aan</th><th>Prioriteit</th><th>Status</th><th>Acties</th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Start</th><th>Deadline</th><th>Prioriteit</th><th>Status</th><th></th>
+          </tr></thead>
           <tbody id="taken-tbody"></tbody>
         </table>
-        <div id="taken-empty" class="empty" style="display:none"><div class="empty-icon">✅</div>Geen taken gevonden.</div>
+        <div id="taken-empty" class="empty" style="display:none"><div class="empty-icon">✅</div>Geen taken.</div>
       </div>
+    </div>
+
+    <!-- TIJDLIJN -->
+    <div id="tab-tijdlijn" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Tijdlijn</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="tlNav(-1)">← Vorige</button>
+          <span id="tl-month-label" style="font-size:0.88rem;font-weight:600;min-width:130px;text-align:center"></span>
+          <button class="btn btn-ghost btn-sm" onclick="tlNav(1)">Volgende →</button>
+          <button class="btn btn-print" onclick="printSection('tijdlijn')">🖨 Printen</button>
+        </div>
+      </div>
+      <!-- Legend -->
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:0.78rem;align-items:center">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:3px;background:#3A7D44;display:inline-block"></span>Leverancier</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:3px;background:#C0392B;display:inline-block"></span>Eigen taak</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:3px;background:#2874A6;display:inline-block"></span>Inspectie / Overig</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:3px;background:#8E44AD;display:inline-block"></span>Levering</span>
+        <span style="display:flex;align-items:center;gap:5px;color:var(--red)">⬜ rode rand = overtijd</span>
+      </div>
+      <div id="tl-overlap-banners" style="margin-bottom:10px"></div>
+      <div class="card" style="padding:0">
+        <div id="tijdlijn-wrap" style="overflow-x:auto;padding:18px 20px">
+          <div id="tijdlijn-canvas"></div>
+        </div>
+      </div>
+      <div id="tijdlijn-empty" class="empty" style="display:none"><div class="empty-icon">📅</div>Geen taken met datum deze maand.</div>
     </div>
 
     <!-- KOSTEN -->
@@ -425,20 +325,18 @@
           <button class="btn btn-primary" onclick="openModal('kost')">+ Uitgave toevoegen</button>
         </div>
       </div>
-      <div class="widget-grid" id="kosten-widgets" style="margin-bottom:20px"></div>
-      <div class="card" style="padding:18px 20px;margin-bottom:20px" id="budget-chart-wrap">
-        <div class="form-label" style="margin-bottom:8px">Budgetverdeling</div>
-        <div class="budget-chart" id="budget-chart"></div>
-        <div id="budget-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:0.75rem"></div>
+      <div class="widget-grid" id="kosten-widgets"></div>
+      <div class="card" style="padding:16px 18px;margin-bottom:18px">
+        <div class="form-label" style="margin-bottom:7px">Verdeling per categorie</div>
+        <div id="budget-chart" style="display:flex;height:22px;border-radius:7px;overflow:hidden;gap:2px"></div>
+        <div id="budget-legend" style="display:flex;flex-wrap:wrap;gap:9px;margin-top:9px;font-size:0.73rem"></div>
       </div>
       <div class="card">
         <table>
-          <thead>
-            <tr><th>Omschrijving</th><th>Categorie</th><th>Ruimte</th><th>Bedrag</th><th>Datum</th><th>Acties</th></tr>
-          </thead>
+          <thead><tr><th>Omschrijving</th><th>Categorie</th><th>Ruimte</th><th>Bedrag</th><th>Datum</th><th></th></tr></thead>
           <tbody id="kosten-tbody"></tbody>
         </table>
-        <div id="kosten-empty" class="empty" style="display:none"><div class="empty-icon">💶</div>Geen uitgaven geregistreerd.</div>
+        <div id="kosten-empty" class="empty" style="display:none"><div class="empty-icon">💶</div>Geen uitgaven.</div>
       </div>
     </div>
 
@@ -453,12 +351,10 @@
       </div>
       <div class="card">
         <table>
-          <thead>
-            <tr><th>Naam</th><th>Bedrijf</th><th>Telefoon</th><th>Email</th><th>Specialisme</th><th>Status</th><th>Acties</th></tr>
-          </thead>
+          <thead><tr><th>Naam</th><th>Bedrijf</th><th>Telefoon</th><th>Email</th><th>Specialisme</th><th>Status</th><th></th></tr></thead>
           <tbody id="lev-tbody"></tbody>
         </table>
-        <div id="lev-empty" class="empty" style="display:none"><div class="empty-icon">👷</div>Nog geen leveranciers toegevoegd.</div>
+        <div id="lev-empty" class="empty" style="display:none"><div class="empty-icon">👷</div>Geen leveranciers.</div>
       </div>
     </div>
 
@@ -468,72 +364,88 @@
         <div class="section-title">Inspiratie & Links</div>
         <button class="btn btn-primary" onclick="openModal('link')">+ Link opslaan</button>
       </div>
-      <div class="link-grid" id="link-grid"></div>
-      <div id="link-empty" class="empty" style="display:none"><div class="empty-icon">🔗</div>Nog geen inspiratielinks opgeslagen.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px" id="link-grid"></div>
+      <div id="link-empty" class="empty" style="display:none"><div class="empty-icon">🔗</div>Geen links.</div>
     </div>
 
-    <!-- AGENDA -->
-    <div id="tab-agenda" class="tab-content">
+    <!-- OVERZICHT -->
+    <div id="tab-overzicht" class="tab-content">
       <div class="section-header">
-        <div class="section-title">Agenda</div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-print" onclick="printSection('agenda')">🖨 Printen</button>
-          <button class="btn btn-primary" onclick="openModal('agenda')">+ Agenda item</button>
-        </div>
+        <div class="section-title">Projectoverzicht</div>
+        <button class="btn btn-print" onclick="printOverzicht()">🖨 Afdrukken</button>
       </div>
-      <div class="agenda-list" id="agenda-list"></div>
-      <div id="agenda-empty" class="empty" style="display:none"><div class="empty-icon">📅</div>Geen agenda items gepland.</div>
-    </div>
-    <!-- TIJDLIJN -->
-    <div id="tab-tijdlijn" class="tab-content">
-      <div class="section-header">
-        <div class="section-title">Projecttijdlijn</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn btn-ghost btn-sm" id="tl-prev" onclick="tlNav(-1)">← Vorige maand</button>
-          <span id="tl-month-label" style="font-size:0.9rem;font-weight:600;min-width:120px;text-align:center"></span>
-          <button class="btn btn-ghost btn-sm" id="tl-next" onclick="tlNav(1)">Volgende maand →</button>
-          <button class="btn btn-print" onclick="printSection('tijdlijn')">🖨 Printen</button>
-        </div>
-      </div>
-      <div class="card" style="padding:0;overflow:visible">
-        <div id="tijdlijn-wrap" style="overflow-x:auto;padding:20px 24px">
-          <div id="tijdlijn-canvas"></div>
-        </div>
-      </div>
-      <div id="tijdlijn-empty" class="empty" style="display:none">
-        <div class="empty-icon">📅</div>Geen agenda items om te tonen. Voeg items toe via de Agenda tab.
-      </div>
+      <div id="overzicht-content"></div>
     </div>
   </main>
 </div>
 
-<!-- ── MODALS ── -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
+<!-- TAAK MODAL -->
+<div class="modal-overlay" id="taak-modal-overlay" onclick="if(event.target===this)closeTaakModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="taak-modal-title">Taak toevoegen</div>
+      <button class="modal-close" onclick="closeTaakModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Naam *</label><input class="form-input" id="t-naam" placeholder="Keuken slopen..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Ruimte</label>
+          <select class="form-select" id="t-ruimte"><option value="">—</option><option>Keuken</option><option>Badkamer</option><option>Woonkamer</option><option>Slaapkamer</option><option>Gang</option><option>Tuin</option><option>Zolder</option><option>Kelder</option><option>Overig</option></select></div>
+        <div class="form-group"><label class="form-label">Persoon / Leverancier</label><input class="form-input" id="t-persoon" placeholder="Jan, Loodgieter X..."></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Startdatum *</label><input class="form-input" id="t-start" type="date"></div>
+        <div class="form-group"><label class="form-label">Einddatum *</label><input class="form-input" id="t-eind" type="date"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prioriteit</label>
+          <select class="form-select" id="t-prioriteit"><option value="hoog">Hoog</option><option value="middel" selected>Middel</option><option value="laag">Laag</option></select></div>
+        <div class="form-group"><label class="form-label">Status</label>
+          <select class="form-select" id="t-status"><option value="te doen">Te doen</option><option value="bezig">Bezig</option><option value="wacht op">Wacht op</option><option value="afgerond">Afgerond</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Type / Kleur</label>
+        <div class="kleur-picker" id="kleur-picker">
+          <div class="kleur-opt selected" data-kleur="#3A7D44" style="background:#3A7D44" title="Leverancier (groen)" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#C0392B" style="background:#C0392B" title="Eigen taak (rood)" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#2874A6" style="background:#2874A6" title="Inspectie / Overig (blauw)" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#8E44AD" style="background:#8E44AD" title="Levering (paars)" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#C17B3A" style="background:#C17B3A" title="Oranje" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#16A085" style="background:#16A085" title="Teal" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#D35400" style="background:#D35400" title="Donker oranje" onclick="selectKleur(this)"></div>
+          <div class="kleur-opt" data-kleur="#7F8C8D" style="background:#7F8C8D" title="Grijs" onclick="selectKleur(this)"></div>
+        </div>
+        <div style="font-size:0.73rem;color:var(--text-muted);margin-top:4px" id="kleur-label">Leverancier</div>
+      </div>
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="t-notities" placeholder="Extra info..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeTaakModal()">Annuleren</button>
+      <button class="btn btn-primary" onclick="saveTaak()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- GENERIC MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModalDirect()">
+  <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="modal-title">Toevoegen</div>
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
     <div class="modal-body" id="modal-body"></div>
-    <div class="modal-footer" id="modal-footer">
+    <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModalDirect()">Annuleren</button>
-      <button class="btn btn-primary" id="modal-save" onclick="saveModal()">Opslaan</button>
+      <button class="btn btn-primary" onclick="saveModal()">Opslaan</button>
     </div>
   </div>
 </div>
 
 <!-- BUDGET MODAL -->
-<div class="modal-overlay" id="budget-modal-overlay" onclick="closeBudgetModal(event)">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-header">
-      <div class="modal-title">Budget instellen</div>
-      <button class="modal-close" onclick="closeBudgetModalDirect()">✕</button>
-    </div>
+<div class="modal-overlay" id="budget-modal-overlay" onclick="if(event.target===this)closeBudgetModalDirect()">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-header"><div class="modal-title">Budget instellen</div><button class="modal-close" onclick="closeBudgetModalDirect()">✕</button></div>
     <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Totaal budget (€)</label>
-        <input type="number" id="budget-input" class="form-input" placeholder="25000">
-      </div>
+      <div class="form-group"><label class="form-label">Totaal budget (€)</label><input type="number" id="budget-input" class="form-input" placeholder="25000"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeBudgetModalDirect()">Annuleren</button>
@@ -543,22 +455,13 @@
 </div>
 
 <!-- SETTINGS MODAL -->
-<div class="modal-overlay" id="settings-overlay" onclick="closeSettings(event)">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-header">
-      <div class="modal-title">Instellingen</div>
-      <button class="modal-close" onclick="closeSettingsDirect()">✕</button>
-    </div>
+<div class="modal-overlay" id="settings-overlay" onclick="if(event.target===this)closeSettingsDirect()">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header"><div class="modal-title">Instellingen</div><button class="modal-close" onclick="closeSettingsDirect()">✕</button></div>
     <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">GitHub Token</label>
-        <input type="password" id="settings-token" class="form-input" placeholder="ghp_xxxx">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Projectnaam</label>
-        <input type="text" id="settings-project" class="form-input" placeholder="Verbouwing 2025">
-      </div>
-      <div style="font-size:0.8rem;color:var(--text-muted)">Repo: jmjoosse/verbuilding</div>
+      <div class="form-group"><label class="form-label">GitHub Token</label><input type="password" id="settings-token" class="form-input" placeholder="ghp_xxxx"></div>
+      <div class="form-group"><label class="form-label">Projectnaam</label><input type="text" id="settings-project" class="form-input" placeholder="Verbouwing 2025"></div>
+      <div style="font-size:0.78rem;color:var(--text-muted)">Repo: jmjoosse/verbuilding</div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeSettingsDirect()">Annuleren</button>
@@ -570,886 +473,670 @@
 <div id="toast"></div>
 
 <script>
-// ─────────────────────────────────────────────────────────────
-// CONFIG
-// ─────────────────────────────────────────────────────────────
+// ── CONFIG ──────────────────────────────────────────────────
 const GITHUB_OWNER = 'jmjoosse';
 const GITHUB_REPO  = 'verbuilding';
 const DATA_FILE    = 'verbouwing-data.json';
 const CORRECT_PIN  = '3826';
 
-// ─────────────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────────────
-let data = {
-  taken: [], kosten: [], leveranciers: [], links: [], agenda: [],
-  budget: 0, project: 'Verbouwing'
+const RUIMTES = ['Keuken','Badkamer','Woonkamer','Slaapkamer','Gang','Tuin','Zolder','Kelder','Overig'];
+const KOSTEN_CATS = ['Materiaal','Arbeidskosten','Gereedschap','Vergunningen','Ontwerp','Diversen'];
+const CAT_COLORS  = ['#C17B3A','#2874A6','#3A7D44','#8E44AD','#C0392B','#717D7E'];
+const KLEUR_LABELS = {
+  '#3A7D44':'Leverancier','#C0392B':'Eigen taak','#2874A6':'Inspectie / Overig',
+  '#8E44AD':'Levering','#C17B3A':'Overig','#16A085':'Teal','#D35400':'Donker oranje','#7F8C8D':'Grijs'
 };
-let currentModal = null;
-let editIndex = null;
-let activeRuimteFilter = '';
-let githubToken = '';
-let githubSha = null; // SHA of current data file for updates
 
-// ─────────────────────────────────────────────────────────────
-// PINCODE
-// ─────────────────────────────────────────────────────────────
+let data = { taken:[], kosten:[], leveranciers:[], links:[], budget:0, project:'Verbouwing' };
+let currentModal = null;
+let editTaakIdx  = null;
+let editModalIdx = null;
+let taakFilterStatus = '';
+let githubToken = '';
+let githubSha   = null;
+let tlYear  = new Date().getFullYear();
+let tlMonth = new Date().getMonth();
+
+// ── PIN ─────────────────────────────────────────────────────
 let pinInput = '';
 const pinNumpad = document.getElementById('pin-numpad');
 [1,2,3,4,5,6,7,8,9,'',0,'⌫'].forEach(k => {
   const b = document.createElement('button');
-  b.className = 'pin-btn' + (k === '⌫' ? ' del' : '');
+  b.className = 'pin-btn';
   b.textContent = k;
   if (k === '') { b.style.visibility = 'hidden'; }
   b.onclick = () => handlePin(k);
   pinNumpad.appendChild(b);
 });
-
 function handlePin(k) {
-  if (k === '⌫') { pinInput = pinInput.slice(0,-1); }
-  else if (k !== '' && pinInput.length < 4) { pinInput += k; }
-  updatePinDots();
-  if (pinInput.length === 4) { checkPin(); }
+  if (k==='⌫') pinInput=pinInput.slice(0,-1);
+  else if (k!=='' && pinInput.length<4) pinInput+=k;
+  document.querySelectorAll('.pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<pinInput.length));
+  if (pinInput.length===4) checkPin();
 }
-
-function updatePinDots() {
-  document.querySelectorAll('.pin-dot').forEach((d,i) => {
-    d.classList.toggle('filled', i < pinInput.length);
-  });
-}
-
 function checkPin() {
-  if (pinInput === CORRECT_PIN) {
-    document.getElementById('pin-screen').style.display = 'none';
-    initApp();
-  } else {
-    document.getElementById('pin-error').textContent = 'Verkeerde pincode';
-    pinInput = '';
-    setTimeout(() => {
-      updatePinDots();
-      document.getElementById('pin-error').textContent = '';
-    }, 800);
+  if (pinInput===CORRECT_PIN) { document.getElementById('pin-screen').style.display='none'; initApp(); }
+  else {
+    document.getElementById('pin-error').textContent='Verkeerde pincode';
+    pinInput='';
+    setTimeout(()=>{ document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('filled')); document.getElementById('pin-error').textContent=''; },800);
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────
+// ── INIT ────────────────────────────────────────────────────
 function initApp() {
-  githubToken = localStorage.getItem('gh_token') || '';
-  const localData = localStorage.getItem('verbouwing_data');
-  if (localData) { try { data = JSON.parse(localData); } catch(e){} }
-
-  if (!githubToken) {
-    document.getElementById('setup-screen').style.display = 'flex';
-  } else {
-    showApp();
-    syncFromGitHub();
+  githubToken = localStorage.getItem('gh_token')||'';
+  const local = localStorage.getItem('verbouwing_data');
+  if (local) { try { data=JSON.parse(local); } catch(e){} }
+  // migrate old agenda items into taken
+  if (data.agenda && data.agenda.length) {
+    data.agenda.forEach(a => {
+      data.taken.push({ naam:a.titel, ruimte:a.ruimte||'', persoon:a.persoon||'', start:a.datum||'', eind:a.datum||'', prioriteit:'middel', status:'te doen', kleur:'#2874A6', notities:a.notities||'' });
+    });
+    delete data.agenda;
+    saveLocal();
   }
+  if (!githubToken) { document.getElementById('setup-screen').style.display='flex'; }
+  else { showApp(); syncFromGitHub(); }
 }
-
-function showApp() {
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  renderAll();
-}
-
+function showApp() { document.getElementById('setup-screen').style.display='none'; document.getElementById('app').style.display='block'; renderAll(); }
 function saveSetup() {
-  const token = document.getElementById('setup-token').value.trim();
-  if (!token) { toast('Voer een token in'); return; }
-  githubToken = token;
-  localStorage.setItem('gh_token', token);
-  showApp();
-  syncFromGitHub();
+  const t=document.getElementById('setup-token').value.trim();
+  if(!t){toast('Voer een token in');return;}
+  githubToken=t; localStorage.setItem('gh_token',t); showApp(); syncFromGitHub();
 }
+function skipSetup() { localStorage.setItem('gh_token',''); showApp(); }
 
-function skipSetup() {
-  localStorage.setItem('gh_token', '');
-  githubToken = '';
-  showApp();
-}
-
-function openSettings() {
-  document.getElementById('settings-token').value = githubToken;
-  document.getElementById('settings-project').value = data.project || 'Verbouwing';
-  document.getElementById('settings-overlay').classList.add('open');
-}
-function closeSettings(e) { if(e.target.id==='settings-overlay') closeSettingsDirect(); }
+// ── SETTINGS ────────────────────────────────────────────────
+function openSettings() { document.getElementById('settings-token').value=githubToken; document.getElementById('settings-project').value=data.project||'Verbouwing'; document.getElementById('settings-overlay').classList.add('open'); }
 function closeSettingsDirect() { document.getElementById('settings-overlay').classList.remove('open'); }
 function saveSettings() {
-  githubToken = document.getElementById('settings-token').value.trim();
-  data.project = document.getElementById('settings-project').value.trim() || 'Verbouwing';
-  localStorage.setItem('gh_token', githubToken);
-  saveLocal(); closeSettingsDirect();
-  toast('Instellingen opgeslagen'); renderAll();
-  if (githubToken) syncToGitHub();
+  githubToken=document.getElementById('settings-token').value.trim();
+  data.project=document.getElementById('settings-project').value.trim()||'Verbouwing';
+  localStorage.setItem('gh_token',githubToken);
+  save(); closeSettingsDirect(); toast('Opgeslagen'); renderAll();
+  if(githubToken) syncToGitHub();
 }
 
-// ─────────────────────────────────────────────────────────────
-// GITHUB SYNC
-// ─────────────────────────────────────────────────────────────
-function setSyncStatus(state) {
-  const dot = document.getElementById('sync-dot');
-  const label = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + state;
-  const labels = { ok: 'Gesynchroniseerd', syncing: 'Bezig...', err: 'Fout', '': '—' };
-  label.textContent = labels[state] || '—';
+// ── GITHUB SYNC ─────────────────────────────────────────────
+function setSyncStatus(s) {
+  document.getElementById('sync-dot').className='sync-dot '+s;
+  document.getElementById('sync-label').textContent={ok:'Gesynchroniseerd',syncing:'Bezig...',err:'Fout'}[s]||'—';
 }
-
 async function syncFromGitHub() {
-  if (!githubToken) return;
-  setSyncStatus('syncing');
+  if(!githubToken) return; setSyncStatus('syncing');
   try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
-      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (res.status === 404) { await syncToGitHub(); return; }
-    if (!res.ok) throw new Error('fetch failed');
-    const json = await res.json();
-    githubSha = json.sha;
-    const decoded = JSON.parse(atob(json.content.replace(/\n/g,'')));
-    data = decoded;
-    saveLocal(); renderAll();
-    setSyncStatus('ok');
-  } catch(e) { setSyncStatus('err'); toast('Sync mislukt: ' + e.message); }
+    const r=await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,{headers:{Authorization:`token ${githubToken}`,Accept:'application/vnd.github.v3+json'}});
+    if(r.status===404){await syncToGitHub();return;}
+    if(!r.ok) throw new Error('fetch failed');
+    const j=await r.json(); githubSha=j.sha;
+    data=JSON.parse(atob(j.content.replace(/\n/g,'')));
+    saveLocal(); renderAll(); setSyncStatus('ok');
+  } catch(e){setSyncStatus('err');toast('Sync mislukt: '+e.message);}
 }
-
 async function syncToGitHub() {
-  if (!githubToken) return;
-  setSyncStatus('syncing');
+  if(!githubToken) return; setSyncStatus('syncing');
   try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-    const body = { message: 'Update verbouwing data', content };
-    if (githubSha) body.sha = githubSha;
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) { const e = await res.json(); throw new Error(e.message); }
-    const result = await res.json();
-    githubSha = result.content.sha;
-    setSyncStatus('ok');
-  } catch(e) { setSyncStatus('err'); toast('Opslaan mislukt: ' + e.message); }
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+    const body={message:'Update verbouwing data',content};
+    if(githubSha) body.sha=githubSha;
+    const r=await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`,{method:'PUT',headers:{Authorization:`token ${githubToken}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){const e=await r.json();throw new Error(e.message);}
+    const res=await r.json(); githubSha=res.content.sha; setSyncStatus('ok');
+  } catch(e){setSyncStatus('err');toast('Opslaan mislukt: '+e.message);}
 }
+function syncNow(){syncFromGitHub();}
+function saveLocal(){localStorage.setItem('verbouwing_data',JSON.stringify(data));}
+function save(){saveLocal();if(githubToken)syncToGitHub();}
 
-function syncNow() { syncFromGitHub(); }
-
-function saveLocal() { localStorage.setItem('verbouwing_data', JSON.stringify(data)); }
-
-function save() { saveLocal(); if(githubToken) syncToGitHub(); }
-
-// ─────────────────────────────────────────────────────────────
-// TABS
-// ─────────────────────────────────────────────────────────────
+// ── TABS ─────────────────────────────────────────────────────
 function showTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
   event.currentTarget.classList.add('active');
-  if (name === 'dashboard') renderDashboard();
-  if (name === 'taken') renderTaken();
-  if (name === 'kosten') renderKosten();
-  if (name === 'leveranciers') renderLeveranciers();
-  if (name === 'inspiratie') renderLinks();
-  if (name === 'tijdlijn') renderTijdlijn();
+  const renders = {dashboard:renderDashboard,taken:renderTaken,tijdlijn:renderTijdlijn,kosten:renderKosten,leveranciers:renderLeveranciers,inspiratie:renderLinks,overzicht:renderOverzicht};
+  if(renders[name]) renders[name]();
+}
+function renderAll(){renderDashboard();renderTaken();renderTijdlijn();renderKosten();renderLeveranciers();renderLinks();renderOverzicht();}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function fmt(n){return Number(n).toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(s){if(!s)return'—';const d=new Date(s);return d.toLocaleDateString('nl-NL',{day:'numeric',month:'short'});}
+function today0(){const d=new Date();d.setHours(0,0,0,0);return d;}
+function isOvertijd(t){if(!t.eind||t.status==='afgerond')return false;return new Date(t.eind)<today0();}
+function daysLeft(t){if(!t.eind)return null;const diff=new Date(t.eind)-today0();return Math.ceil(diff/86400000);}
+
+let toastTimer;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800);}
+
+function statusBadge(s){return{'te doen':'badge-gray',bezig:'badge-yellow','wacht op':'badge-blue',afgerond:'badge-green'}[s]||'badge-gray';}
+function levStatusBadge(s){return{offerte:'badge-yellow',bevestigd:'badge-green',afgerond:'badge-blue',geannuleerd:'badge-red'}[s]||'badge-gray';}
+
+// ── KLEUR PICKER ─────────────────────────────────────────────
+function selectKleur(el) {
+  document.querySelectorAll('.kleur-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('kleur-label').textContent = KLEUR_LABELS[el.dataset.kleur]||'';
+}
+function getSelectedKleur(){const el=document.querySelector('.kleur-opt.selected');return el?el.dataset.kleur:'#3A7D44';}
+function setKleurPicker(kleur){
+  document.querySelectorAll('.kleur-opt').forEach(o=>{
+    o.classList.toggle('selected',o.dataset.kleur===kleur);
+  });
+  document.getElementById('kleur-label').textContent=KLEUR_LABELS[kleur]||'';
 }
 
-function renderAll() { renderDashboard(); renderTaken(); renderKosten(); renderLeveranciers(); renderLinks(); renderAgenda(); renderTijdlijn(); }
-
-// ─────────────────────────────────────────────────────────────
-// DASHBOARD
-// ─────────────────────────────────────────────────────────────
+// ── DASHBOARD ────────────────────────────────────────────────
 function renderDashboard() {
-  const totalKosten = data.kosten.reduce((s,k) => s + parseFloat(k.bedrag||0), 0);
+  const totaal = data.taken.length;
+  const afgerond = data.taken.filter(t=>t.status==='afgerond').length;
+  const pct = totaal ? Math.round(afgerond/totaal*100) : 0;
+  const totalKosten = data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);
   const budget = parseFloat(data.budget||0);
-  const resterend = budget - totalKosten;
-  const takenTotaal = data.taken.length;
-  const takenAfgerond = data.taken.filter(t => t.status === 'afgerond').length;
-  const pct = takenTotaal ? Math.round(takenAfgerond/takenTotaal*100) : 0;
+  const overtijdItems = data.taken.filter(isOvertijd);
+  const resterend = budget-totalKosten;
 
   document.getElementById('dash-widgets').innerHTML = `
-    <div class="widget">
-      <div class="widget-label">Voortgang taken</div>
-      <div class="widget-value accent">${pct}%</div>
-      <div class="widget-sub">${takenAfgerond} van ${takenTotaal} klaar</div>
-      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
-    </div>
-    <div class="widget">
-      <div class="widget-label">Totaal uitgegeven</div>
-      <div class="widget-value">€${fmt(totalKosten)}</div>
-      <div class="widget-sub">${budget ? 'van €'+fmt(budget)+' budget' : 'Geen budget ingesteld'}</div>
-      ${budget ? `<div class="progress-bar-wrap"><div class="progress-bar ${totalKosten>budget?'':'green'}" style="width:${Math.min(100,totalKosten/budget*100)}%"></div></div>` : ''}
-    </div>
-    <div class="widget">
-      <div class="widget-label">Resterend budget</div>
-      <div class="widget-value ${resterend < 0 ? 'red' : 'green'}">${budget ? '€'+fmt(resterend) : '—'}</div>
-      <div class="widget-sub">${budget ? (resterend < 0 ? '⚠️ Over budget' : 'Binnen budget') : 'Stel budget in bij Kosten'}</div>
-    </div>
-    <div class="widget">
-      <div class="widget-label">Leveranciers</div>
-      <div class="widget-value">${data.leveranciers.length}</div>
-      <div class="widget-sub">${data.leveranciers.filter(l=>l.status==='bevestigd').length} bevestigd</div>
-    </div>
+    <div class="widget"><div class="widget-label">Voortgang</div><div class="widget-value accent">${pct}%</div><div class="widget-sub">${afgerond} van ${totaal} klaar</div><div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div></div>
+    <div class="widget"><div class="widget-label">Overtijd</div><div class="widget-value ${overtijdItems.length?'red':'green'}">${overtijdItems.length}</div><div class="widget-sub">${overtijdItems.length?'items voorbij deadline':'Alles op schema'}</div></div>
+    <div class="widget"><div class="widget-label">Uitgegeven</div><div class="widget-value">€${fmt(totalKosten)}</div><div class="widget-sub">${budget?'van €'+fmt(budget):''}</div>${budget?`<div class="progress-bar-wrap"><div class="progress-bar ${totalKosten>budget?'':'green'}" style="width:${Math.min(100,totalKosten/budget*100)}%"></div></div>`:''}</div>
+    <div class="widget"><div class="widget-label">Resterend</div><div class="widget-value ${resterend<0?'red':'green'}">${budget?'€'+fmt(resterend):'—'}</div><div class="widget-sub">${budget?(resterend<0?'⚠️ Over budget':'✅ Binnen budget'):''}</div></div>
   `;
 
-  // Aankomende taken
-  const openTaken = data.taken.filter(t => t.status !== 'afgerond').slice(0,5);
-  document.getElementById('dash-taken').innerHTML = openTaken.length
-    ? openTaken.map(t => `
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span class="badge ${statusBadge(t.status)}">${t.status}</span>
-          <span style="font-size:0.875rem;flex:1">${t.naam}</span>
-          <span style="font-size:0.75rem;color:var(--text-muted)">${t.ruimte||''}</span>
-        </div>`).join('')
-    : '<div style="color:var(--text-muted);font-size:0.85rem;padding:8px 0">Geen open taken 🎉</div>';
+  // Overtijd items
+  const ot = data.taken.filter(isOvertijd).slice(0,6);
+  document.getElementById('dash-overtijd').innerHTML = ot.length
+    ? ot.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="width:9px;height:9px;border-radius:50%;background:${t.kleur||'#C0392B'};flex-shrink:0"></span>
+        <span style="flex:1;font-size:0.84rem;font-weight:500">${t.naam}</span>
+        <span class="badge badge-overtijd">${Math.abs(daysLeft(t))}d over</span>
+      </div>`).join('')
+    : '<div style="color:var(--text-muted);font-size:0.84rem;padding:6px 0">Alles op schema ✅</div>';
 
-  // Aankomende agenda
-  const now = new Date(); const upcoming = data.agenda
-    .filter(a => new Date(a.datum) >= now)
-    .sort((a,b) => new Date(a.datum)-new Date(b.datum)).slice(0,4);
-  document.getElementById('dash-agenda').innerHTML = upcoming.length
-    ? upcoming.map(a => {
-        const d = new Date(a.datum);
-        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
-          <div style="text-align:center;min-width:36px">
-            <div style="font-size:1.2rem;font-weight:700;color:var(--accent);line-height:1">${d.getDate()}</div>
-            <div style="font-size:0.65rem;color:var(--text-muted);text-transform:uppercase">${d.toLocaleString('nl',{month:'short'})}</div>
-          </div>
-          <div>
-            <div style="font-size:0.875rem;font-weight:600">${a.titel}</div>
-            <div style="font-size:0.75rem;color:var(--text-muted)">${a.tijd||''} ${a.persoon?'— '+a.persoon:''}</div>
-          </div>
-        </div>`;}).join('')
-    : '<div style="color:var(--text-muted);font-size:0.85rem;padding:8px 0">Geen aankomende items</div>';
+  // Aankomend 7 dagen
+  const now = today0(); const in7 = new Date(now); in7.setDate(in7.getDate()+7);
+  const aankomend = data.taken.filter(t=>t.status!=='afgerond'&&t.eind&&new Date(t.eind)>=now&&new Date(t.eind)<=in7).sort((a,b)=>new Date(a.eind)-new Date(b.eind)).slice(0,6);
+  document.getElementById('dash-aankomend').innerHTML = aankomend.length
+    ? aankomend.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <span style="width:9px;height:9px;border-radius:50%;background:${t.kleur||'#3A7D44'};flex-shrink:0"></span>
+        <span style="flex:1;font-size:0.84rem">${t.naam}</span>
+        <span style="font-size:0.75rem;color:var(--text-muted)">${fmtDate(t.eind)}</span>
+      </div>`).join('')
+    : '<div style="color:var(--text-muted);font-size:0.84rem;padding:6px 0">Niets gepland deze week</div>';
 }
 
-// ─────────────────────────────────────────────────────────────
-// TAKEN
-// ─────────────────────────────────────────────────────────────
-const RUIMTES = ['Keuken','Badkamer','Woonkamer','Slaapkamer','Gang','Tuin','Zolder','Kelder','Overig'];
-
+// ── TAKEN ────────────────────────────────────────────────────
 function renderTaken() {
-  // Ruimte filter tabs
-  const ruimteSet = [...new Set(data.taken.map(t=>t.ruimte).filter(Boolean))];
-  const tabsHtml = ['Alles', ...RUIMTES.filter(r => ruimteSet.includes(r) || true)].map(r =>
-    `<button class="ruimte-tab ${activeRuimteFilter===(r==='Alles'?'':r)?'active':''}" onclick="setRuimteFilter('${r==='Alles'?'':r}')">${r}</button>`
-  ).join('');
-  document.getElementById('ruimte-tabs').innerHTML = tabsHtml;
+  // Filter chips
+  const statussen = ['te doen','bezig','wacht op','afgerond'];
+  const chips = document.getElementById('taken-filter-chips');
+  chips.innerHTML = ['Alles',...statussen].map(s=>`<button class="chip ${taakFilterStatus===(s==='Alles'?'':s)?'active':''}" onclick="setTaakFilter('${s==='Alles'?'':s}')">${s.charAt(0).toUpperCase()+s.slice(1)}</button>`).join('');
 
-  // Update dropdown
-  const sel = document.getElementById('filter-ruimte');
-  sel.innerHTML = '<option value="">Alle ruimtes</option>' + RUIMTES.map(r=>`<option value="${r}" ${sel.value===r?'selected':''}>${r}</option>`).join('');
-
-  const filtered = activeRuimteFilter ? data.taken.filter(t => t.ruimte===activeRuimteFilter) : data.taken;
+  const filtered = taakFilterStatus ? data.taken.filter(t=>t.status===taakFilterStatus) : data.taken;
+  const sorted = [...filtered].sort((a,b)=>{
+    if(isOvertijd(a)&&!isOvertijd(b)) return -1;
+    if(!isOvertijd(a)&&isOvertijd(b)) return 1;
+    return new Date(a.eind||'9999')-new Date(b.eind||'9999');
+  });
 
   const tbody = document.getElementById('taken-tbody');
-  document.getElementById('taken-empty').style.display = filtered.length ? 'none' : 'block';
-  tbody.innerHTML = filtered.map((t,i) => {
-    const realIdx = data.taken.indexOf(t);
-    return `<tr>
-      <td><strong>${t.naam}</strong>${t.notities?`<br><span style="color:var(--text-muted);font-size:0.75rem">${t.notities}</span>`:''}
-        ${t.agendaRef ? '<br><span style="font-size:0.72rem;color:var(--accent)">📅 In agenda</span>' : ''}</td>
-      <td><span class="badge badge-gray">${t.ruimte||'—'}</span></td>
-      <td>${t.persoon||'—'}</td>
-      <td><span class="prio-${t.prioriteit||'middel'}">${(t.prioriteit||'middel').charAt(0).toUpperCase()+(t.prioriteit||'middel').slice(1)}</span></td>
-      <td>
-        <select class="form-select" style="font-size:0.78rem;padding:4px 8px" onchange="updateTaakStatus(${realIdx},this.value)">
-          ${['te doen','bezig','wacht op','afgerond'].map(s=>`<option ${t.status===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </td>
+  document.getElementById('taken-empty').style.display = sorted.length?'none':'block';
+  tbody.innerHTML = sorted.map(t=>{
+    const idx = data.taken.indexOf(t);
+    const ot = isOvertijd(t);
+    const dl = daysLeft(t);
+    const dlLabel = dl===null?'—':dl<0?`<span class="badge badge-overtijd">${Math.abs(dl)}d over</span>`:dl===0?`<span class="badge badge-yellow">Vandaag</span>`:`<span style="color:var(--text-muted);font-size:0.78rem">${dl}d</span>`;
+    return `<tr class="${ot?'row-overtijd':''}">
+      <td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${t.kleur||'#3A7D44'}"></span></td>
+      <td><strong>${t.naam}</strong>${t.notities?`<br><span style="color:var(--text-muted);font-size:0.73rem">${t.notities}</span>`:''}</td>
+      <td>${t.ruimte?`<span class="badge badge-gray">${t.ruimte}</span>`:'—'}</td>
+      <td style="font-size:0.82rem">${t.persoon||'—'}</td>
+      <td style="font-size:0.8rem;color:var(--text-muted)">${fmtDate(t.start)}</td>
+      <td style="font-size:0.8rem">${fmtDate(t.eind)}<br>${dlLabel}</td>
+      <td><span style="font-size:0.8rem;font-weight:600;color:${{hoog:'var(--red)',middel:'var(--yellow)',laag:'var(--green)'}[t.prioriteit]||'#888'}">${(t.prioriteit||'').charAt(0).toUpperCase()+(t.prioriteit||'').slice(1)}</span></td>
+      <td><select class="form-select" style="font-size:0.76rem;padding:3px 7px" onchange="updateStatus(${idx},this.value)">
+        ${['te doen','bezig','wacht op','afgerond'].map(s=>`<option ${t.status===s?'selected':''}>${s}</option>`).join('')}
+      </select></td>
       <td style="white-space:nowrap">
-        <button class="btn btn-ghost btn-sm" onclick="editItem('taak',${realIdx})">✏️</button>
-        <button class="btn btn-ghost btn-sm" onclick="addToAgendaFromTaak(${realIdx})" title="Naar agenda">📅</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteItem('taken',${realIdx})">🗑</button>
+        <button class="btn btn-ghost btn-sm" onclick="openTaakModal(${idx})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTaak(${idx})">🗑</button>
       </td>
     </tr>`;
   }).join('');
 }
+function setTaakFilter(s){taakFilterStatus=s;renderTaken();}
+function updateStatus(idx,val){data.taken[idx].status=val;save();renderDashboard();renderTijdlijn();renderOverzicht();}
+function deleteTaak(idx){if(!confirm('Verwijderen?'))return;data.taken.splice(idx,1);save();renderAll();toast('Verwijderd');}
 
-function setRuimteFilter(r) { activeRuimteFilter = r; renderTaken(); }
-
-function updateTaakStatus(idx, val) {
-  data.taken[idx].status = val; save(); renderDashboard();
+// ── TAAK MODAL ───────────────────────────────────────────────
+function openTaakModal(idx=null) {
+  editTaakIdx=idx;
+  document.getElementById('taak-modal-title').textContent=idx!==null?'Taak bewerken':'Taak toevoegen';
+  const today=new Date().toISOString().split('T')[0];
+  if(idx!==null){
+    const t=data.taken[idx];
+    document.getElementById('t-naam').value=t.naam||'';
+    document.getElementById('t-ruimte').value=t.ruimte||'';
+    document.getElementById('t-persoon').value=t.persoon||'';
+    document.getElementById('t-start').value=t.start||today;
+    document.getElementById('t-eind').value=t.eind||today;
+    document.getElementById('t-prioriteit').value=t.prioriteit||'middel';
+    document.getElementById('t-status').value=t.status||'te doen';
+    document.getElementById('t-notities').value=t.notities||'';
+    setKleurPicker(t.kleur||'#3A7D44');
+  } else {
+    document.getElementById('t-naam').value='';
+    document.getElementById('t-ruimte').value='';
+    document.getElementById('t-persoon').value='';
+    document.getElementById('t-start').value=today;
+    document.getElementById('t-eind').value=today;
+    document.getElementById('t-prioriteit').value='middel';
+    document.getElementById('t-status').value='te doen';
+    document.getElementById('t-notities').value='';
+    setKleurPicker('#3A7D44');
+  }
+  document.getElementById('taak-modal-overlay').classList.add('open');
+}
+function closeTaakModal(){document.getElementById('taak-modal-overlay').classList.remove('open');editTaakIdx=null;}
+function saveTaak(){
+  const naam=document.getElementById('t-naam').value.trim();
+  const start=document.getElementById('t-start').value;
+  const eind=document.getElementById('t-eind').value;
+  if(!naam){toast('Naam is verplicht');return;}
+  if(!start||!eind){toast('Start- en einddatum zijn verplicht');return;}
+  if(new Date(start)>new Date(eind)){toast('Startdatum moet voor einddatum liggen');return;}
+  const obj={naam,ruimte:document.getElementById('t-ruimte').value,persoon:document.getElementById('t-persoon').value.trim(),start,eind,prioriteit:document.getElementById('t-prioriteit').value,status:document.getElementById('t-status').value,kleur:getSelectedKleur(),notities:document.getElementById('t-notities').value.trim()};
+  if(editTaakIdx!==null) data.taken[editTaakIdx]=obj;
+  else data.taken.push(obj);
+  save(); closeTaakModal(); renderAll(); toast(editTaakIdx!==null?'Opgeslagen ✓':'Toegevoegd ✓');
 }
 
-// ─────────────────────────────────────────────────────────────
-// KOSTEN
-// ─────────────────────────────────────────────────────────────
-const KOSTEN_CATS = ['Materiaal','Arbeidskosten','Gereedschap','Vergunningen','Ontwerp','Diversen'];
-const CAT_COLORS  = ['#C17B3A','#2874A6','#3A7D44','#8E44AD','#C0392B','#717D7E'];
+// ── TIJDLIJN ─────────────────────────────────────────────────
+function tlNav(dir){tlMonth+=dir;if(tlMonth>11){tlMonth=0;tlYear++;}if(tlMonth<0){tlMonth=11;tlYear--;}renderTijdlijn();}
 
-function renderKosten() {
-  const total = data.kosten.reduce((s,k) => s+parseFloat(k.bedrag||0),0);
-  const budget = parseFloat(data.budget||0);
-  const resterend = budget - total;
+function renderTijdlijn(){
+  const firstDay=new Date(tlYear,tlMonth,1);
+  const lastDay=new Date(tlYear,tlMonth+1,0);
+  const daysInMonth=lastDay.getDate();
+  const todayD=today0();
 
-  document.getElementById('kosten-widgets').innerHTML = `
-    <div class="widget">
-      <div class="widget-label">Totaal uitgegeven</div>
-      <div class="widget-value accent">€${fmt(total)}</div>
-      <div class="widget-sub">${data.kosten.length} posten</div>
-    </div>
-    <div class="widget">
-      <div class="widget-label">Totaal budget</div>
-      <div class="widget-value">${budget ? '€'+fmt(budget) : '—'}</div>
-      <div class="widget-sub"><button class="btn btn-ghost btn-sm" onclick="openBudgetModal()">Aanpassen</button></div>
-    </div>
-    <div class="widget">
-      <div class="widget-label">Resterend</div>
-      <div class="widget-value ${resterend<0?'red':'green'}">${budget?'€'+fmt(resterend):'—'}</div>
-      <div class="widget-sub">${budget?(resterend<0?'⚠️ Over budget!':'✅ Binnen budget'):''}</div>
-    </div>
+  document.getElementById('tl-month-label').textContent=firstDay.toLocaleString('nl',{month:'long',year:'numeric'});
+
+  // Items visible this month (overlap with month range)
+  const visible=data.taken.filter(t=>{
+    if(!t.start&&!t.eind) return false;
+    const s=new Date(t.start||t.eind); const e=new Date(t.eind||t.start);
+    return s<=lastDay && e>=firstDay;
+  }).sort((a,b)=>new Date(a.start||a.eind)-new Date(b.start||b.eind));
+
+  const empty=document.getElementById('tijdlijn-empty');
+  const wrap=document.getElementById('tijdlijn-wrap');
+  if(!visible.length){empty.style.display='block';wrap.style.display='none';document.getElementById('tl-overlap-banners').innerHTML='';return;}
+  empty.style.display='none';wrap.style.display='block';
+
+  const DAY_W=Math.max(26,Math.floor(Math.min(window.innerWidth-300,860)/daysInMonth));
+
+  // Overlap detection: find date ranges that have >1 item
+  const overlapDays=[];
+  for(let d=1;d<=daysInMonth;d++){
+    const dt=new Date(tlYear,tlMonth,d);
+    const count=visible.filter(t=>{const s=new Date(t.start||t.eind);const e=new Date(t.eind||t.start);return dt>=s&&dt<=e;}).length;
+    if(count>1) overlapDays.push(d);
+  }
+  // Group consecutive overlap days
+  const overlapRanges=[];let i=0;
+  while(i<overlapDays.length){let j=i;while(j+1<overlapDays.length&&overlapDays[j+1]===overlapDays[j]+1)j++;overlapRanges.push([overlapDays[i],overlapDays[j]]);i=j+1;}
+
+  // Overlap banners
+  document.getElementById('tl-overlap-banners').innerHTML=overlapRanges.map(([s,e])=>{
+    const label=s===e?`${s} ${firstDay.toLocaleString('nl',{month:'short'})}`:
+      `${s}–${e} ${firstDay.toLocaleString('nl',{month:'short'})}`;
+    const items=visible.filter(t=>{const ts=new Date(t.start||t.eind);const te=new Date(t.eind||t.start);const ds=new Date(tlYear,tlMonth,s);const de=new Date(tlYear,tlMonth,e);return ts<=de&&te>=ds;});
+    return `<span class="overlap-badge">⚠️ Overlap ${label}: ${items.map(t=>t.naam).join(' & ')}</span>`;
+  }).join('');
+
+  // Header rows
+  let wdHdr='',numHdr='';
+  const wdNames=['zo','ma','di','wo','do','vr','za'];
+  for(let d=1;d<=daysInMonth;d++){
+    const dt=new Date(tlYear,tlMonth,d);
+    const isToday=dt.getTime()===todayD.getTime();
+    const isWE=dt.getDay()===0||dt.getDay()===6;
+    wdHdr+=`<div class="tl-day-header ${isWE?'weekend':''}" style="width:${DAY_W}px;font-size:0.62rem">${wdNames[dt.getDay()]}</div>`;
+    numHdr+=`<div class="tl-day-header ${isToday?'today':''} ${isWE?'weekend':''}" style="width:${DAY_W}px">${d}</div>`;
+  }
+
+  // Rows
+  const todayInMonth=todayD>=firstDay&&todayD<=lastDay;
+  const todayLine=todayInMonth?`<div class="tl-today-line" style="left:${(todayD.getDate()-0.5)*DAY_W}px"></div>`:'';
+
+  let rowsHtml=visible.map(t=>{
+    const tStart=new Date(t.start||t.eind); const tEnd=new Date(t.eind||t.start);
+    // Clamp to month
+    const barStart=Math.max(0,(tStart<firstDay?0:tStart.getDate()-1));
+    const barEndDay=tEnd>lastDay?daysInMonth:tEnd.getDate();
+    const barW=Math.max(6,(barEndDay-barStart)*DAY_W-4);
+    const barLeft=barStart*DAY_W+2;
+    const ot=isOvertijd(t);
+    const dl=daysLeft(t);
+    const dlText=dl===null?'':dl<0?` (${Math.abs(dl)}d over)`:'';
+
+    // BG cells
+    let bgCells='';
+    for(let d=1;d<=daysInMonth;d++){
+      const dt=new Date(tlYear,tlMonth,d);
+      const isWE=dt.getDay()===0||dt.getDay()===6;
+      const isTd=dt.getTime()===todayD.getTime();
+      bgCells+=`<div class="tl-day-bg ${isWE?'weekend':''} ${isTd?'today-col':''}" style="left:${(d-1)*DAY_W}px;width:${DAY_W}px"></div>`;
+    }
+
+    // Overlap highlight
+    const overlapHl=overlapRanges.map(([s,e])=>{
+      const os=Math.max(0,s-1)*DAY_W;
+      const ow=(e-Math.max(1,s))*DAY_W+DAY_W;
+      return `<div class="tl-overlap-warn" style="left:${os}px;width:${ow}px"></div>`;
+    }).join('');
+
+    const label=barW>60?(t.naam.length>14?t.naam.slice(0,13)+'…':t.naam):'';
+
+    return `<div class="tl-row">
+      <div class="tl-row-label"><strong>${t.naam}</strong><span>${t.persoon||''} ${t.ruimte?'· '+t.ruimte:''}${dlText}</span></div>
+      <div class="tl-row-track" style="width:${daysInMonth*DAY_W}px">
+        ${bgCells}${todayLine}${overlapHl}
+        <div class="tl-bar ${ot?'overtijd':''}" style="left:${barLeft}px;width:${barW}px;background:${t.kleur||'#3A7D44'}" title="${t.naam}${dlText}">${label}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('tijdlijn-canvas').innerHTML=`
+    <div style="display:flex;flex-direction:column;min-width:${180+daysInMonth*DAY_W}px">
+      <div style="display:flex;border-bottom:1px solid var(--border);padding-bottom:2px">
+        <div class="tl-label-col" style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;padding:4px 0">Item</div>
+        <div style="display:flex">${wdHdr}</div>
+      </div>
+      <div style="display:flex;border-bottom:2px solid var(--border);margin-bottom:2px">
+        <div class="tl-label-col"></div>
+        <div style="display:flex">${numHdr}</div>
+      </div>
+      ${rowsHtml}
+    </div>`;
+}
+
+// ── KOSTEN ───────────────────────────────────────────────────
+function renderKosten(){
+  const total=data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);
+  const budget=parseFloat(data.budget||0);
+  document.getElementById('kosten-widgets').innerHTML=`
+    <div class="widget"><div class="widget-label">Totaal uitgegeven</div><div class="widget-value accent">€${fmt(total)}</div><div class="widget-sub">${data.kosten.length} posten</div></div>
+    <div class="widget"><div class="widget-label">Budget</div><div class="widget-value">${budget?'€'+fmt(budget):'—'}</div><div class="widget-sub"><button class="btn btn-ghost btn-sm" onclick="openBudgetModal()">Aanpassen</button></div></div>
+    <div class="widget"><div class="widget-label">Resterend</div><div class="widget-value ${budget-total<0?'red':'green'}">${budget?'€'+fmt(budget-total):'—'}</div><div class="widget-sub">${budget?(budget-total<0?'⚠️ Over budget':'✅ Binnen budget'):''}</div></div>
   `;
-
-  // Budget chart by category
-  const catTotals = {};
-  KOSTEN_CATS.forEach(c => catTotals[c] = 0);
-  data.kosten.forEach(k => { catTotals[k.categorie||'Diversen'] = (catTotals[k.categorie||'Diversen']||0) + parseFloat(k.bedrag||0); });
-  const chartHtml = KOSTEN_CATS.map((c,i) => {
-    const pct = total ? catTotals[c]/total*100 : 0;
-    return pct > 0 ? `<div class="budget-segment" style="width:${pct}%;background:${CAT_COLORS[i]};border-radius:4px"></div>` : '';
-  }).join('');
-  document.getElementById('budget-chart').innerHTML = chartHtml || '<div style="width:100%;background:var(--border);border-radius:4px"></div>';
-  document.getElementById('budget-legend').innerHTML = KOSTEN_CATS.map((c,i) => catTotals[c]>0
-    ? `<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:${CAT_COLORS[i]};display:inline-block"></span>${c}: €${fmt(catTotals[c])}</span>` : '').join('');
-
-  const tbody = document.getElementById('kosten-tbody');
-  document.getElementById('kosten-empty').style.display = data.kosten.length ? 'none' : 'block';
-  const sorted = [...data.kosten].sort((a,b) => new Date(b.datum)-new Date(a.datum));
-  tbody.innerHTML = sorted.map((k) => {
-    const realIdx = data.kosten.indexOf(k);
-    return `<tr>
-      <td><strong>${k.omschrijving}</strong>${k.notities?`<br><span style="font-size:0.75rem;color:var(--text-muted)">${k.notities}</span>`:''}
-      ${k.leverancier?`<br><span style="font-size:0.72rem;color:var(--text-muted)">👷 ${k.leverancier}</span>`:''}</td>
-      <td><span class="badge" style="background:${CAT_COLORS[KOSTEN_CATS.indexOf(k.categorie)]||'#ccc'}22;color:${CAT_COLORS[KOSTEN_CATS.indexOf(k.categorie)]||'#888'}">${k.categorie||'—'}</span></td>
-      <td>${k.ruimte||'—'}</td>
-      <td style="font-weight:600;font-family:var(--mono)">€${fmt(parseFloat(k.bedrag||0))}</td>
-      <td style="color:var(--text-muted)">${k.datum||'—'}</td>
-      <td style="white-space:nowrap">
-        <button class="btn btn-ghost btn-sm" onclick="editItem('kost',${realIdx})">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteItem('kosten',${realIdx})">🗑</button>
-      </td>
-    </tr>`;
+  const catTotals={};KOSTEN_CATS.forEach(c=>catTotals[c]=0);
+  data.kosten.forEach(k=>{catTotals[k.categorie||'Diversen']=(catTotals[k.categorie||'Diversen']||0)+parseFloat(k.bedrag||0);});
+  document.getElementById('budget-chart').innerHTML=KOSTEN_CATS.map((c,i)=>{const pct=total?catTotals[c]/total*100:0;return pct>0?`<div style="width:${pct}%;background:${CAT_COLORS[i]};border-radius:3px"></div>`:''}).join('');
+  document.getElementById('budget-legend').innerHTML=KOSTEN_CATS.map((c,i)=>catTotals[c]>0?`<span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:${CAT_COLORS[i]};display:inline-block"></span>${c}: €${fmt(catTotals[c])}</span>`:'').join('');
+  const tbody=document.getElementById('kosten-tbody');
+  document.getElementById('kosten-empty').style.display=data.kosten.length?'none':'block';
+  tbody.innerHTML=[...data.kosten].sort((a,b)=>new Date(b.datum)-new Date(a.datum)).map((k,_)=>{
+    const realIdx=data.kosten.indexOf(k);
+    return`<tr><td><strong>${k.omschrijving}</strong>${k.notities?`<br><span style="font-size:0.73rem;color:var(--text-muted)">${k.notities}</span>`:''}</td><td><span class="badge" style="background:${CAT_COLORS[KOSTEN_CATS.indexOf(k.categorie)]}22;color:${CAT_COLORS[KOSTEN_CATS.indexOf(k.categorie)]}">${k.categorie||'—'}</span></td><td>${k.ruimte||'—'}</td><td style="font-weight:600;font-family:var(--mono)">€${fmt(parseFloat(k.bedrag||0))}</td><td style="color:var(--text-muted)">${k.datum||'—'}</td><td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="editItem('kost',${realIdx})">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteItem('kosten',${realIdx})">🗑</button></td></tr>`;
   }).join('');
 }
+function openBudgetModal(){document.getElementById('budget-input').value=data.budget||'';document.getElementById('budget-modal-overlay').classList.add('open');}
+function closeBudgetModalDirect(){document.getElementById('budget-modal-overlay').classList.remove('open');}
+function saveBudget(){data.budget=parseFloat(document.getElementById('budget-input').value)||0;save();renderKosten();renderDashboard();closeBudgetModalDirect();toast('Budget opgeslagen');}
 
-function openBudgetModal() {
-  document.getElementById('budget-input').value = data.budget || '';
-  document.getElementById('budget-modal-overlay').classList.add('open');
-}
-function closeBudgetModal(e) { if(e.target.id==='budget-modal-overlay') closeBudgetModalDirect(); }
-function closeBudgetModalDirect() { document.getElementById('budget-modal-overlay').classList.remove('open'); }
-function saveBudget() {
-  data.budget = parseFloat(document.getElementById('budget-input').value)||0;
-  save(); renderKosten(); renderDashboard(); closeBudgetModalDirect();
-  toast('Budget opgeslagen');
+// ── LEVERANCIERS ─────────────────────────────────────────────
+function renderLeveranciers(){
+  const tbody=document.getElementById('lev-tbody');
+  document.getElementById('lev-empty').style.display=data.leveranciers.length?'none':'block';
+  tbody.innerHTML=data.leveranciers.map((l,i)=>`<tr><td><strong>${l.naam}</strong></td><td>${l.bedrijf||'—'}</td><td>${l.telefoon?`<a href="tel:${l.telefoon}" style="color:var(--accent)">${l.telefoon}</a>`:'—'}</td><td>${l.email?`<a href="mailto:${l.email}" style="color:var(--accent)">${l.email}</a>`:'—'}</td><td>${l.specialisme||'—'}</td><td><span class="badge ${levStatusBadge(l.status)}">${l.status||'—'}</span></td><td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="editItem('leverancier',${i})">✏️</button><button class="btn btn-danger btn-sm" onclick="deleteItem('leveranciers',${i})">🗑</button></td></tr>`).join('');
 }
 
-// ─────────────────────────────────────────────────────────────
-// LEVERANCIERS
-// ─────────────────────────────────────────────────────────────
-function renderLeveranciers() {
-  const tbody = document.getElementById('lev-tbody');
-  document.getElementById('lev-empty').style.display = data.leveranciers.length ? 'none' : 'block';
-  tbody.innerHTML = data.leveranciers.map((l,i) => `<tr>
-    <td><strong>${l.naam}</strong></td>
-    <td>${l.bedrijf||'—'}</td>
-    <td>${l.telefoon ? `<a href="tel:${l.telefoon}" style="color:var(--accent)">${l.telefoon}</a>` : '—'}</td>
-    <td>${l.email ? `<a href="mailto:${l.email}" style="color:var(--accent)">${l.email}</a>` : '—'}</td>
-    <td>${l.specialisme||'—'}</td>
-    <td><span class="badge ${levStatusBadge(l.status)}">${l.status||'onbekend'}</span></td>
-    <td style="white-space:nowrap">
-      <button class="btn btn-ghost btn-sm" onclick="editItem('leverancier',${i})">✏️</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteItem('leveranciers',${i})">🗑</button>
-    </td>
-  </tr>`).join('');
-}
-
-function levStatusBadge(s) {
-  return {offerte:'badge-yellow',bevestigd:'badge-green',afgerond:'badge-blue',geannuleerd:'badge-red'}[s]||'badge-gray';
-}
-
-// ─────────────────────────────────────────────────────────────
-// LINKS
-// ─────────────────────────────────────────────────────────────
-function renderLinks() {
-  document.getElementById('link-empty').style.display = data.links.length ? 'none' : 'block';
-  document.getElementById('link-grid').innerHTML = data.links.map((l,i) => `
-    <div class="link-card">
-      <div class="link-card-title">${l.titel}</div>
-      ${l.omschrijving?`<div style="font-size:0.8rem;color:var(--text-muted)">${l.omschrijving}</div>`:''}
-      <a href="${l.url}" target="_blank" class="link-card-url">🔗 ${l.url}</a>
-      ${l.tag?`<span class="badge badge-accent link-card-tag">${l.tag}</span>`:''}
-      <div class="link-card-actions">
+// ── LINKS ────────────────────────────────────────────────────
+function renderLinks(){
+  document.getElementById('link-empty').style.display=data.links.length?'none':'block';
+  document.getElementById('link-grid').innerHTML=data.links.map((l,i)=>`
+    <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:7px">
+      <div style="font-weight:600;font-size:0.88rem">${l.titel}</div>
+      ${l.omschrijving?`<div style="font-size:0.78rem;color:var(--text-muted)">${l.omschrijving}</div>`:''}
+      <a href="${l.url}" target="_blank" style="font-size:0.76rem;color:var(--accent)">🔗 ${l.url}</a>
+      ${l.tag?`<span class="badge badge-accent" style="align-self:flex-start">${l.tag}</span>`:''}
+      <div style="display:flex;gap:6px;margin-top:4px">
         <button class="btn btn-ghost btn-sm" onclick="editItem('link',${i})">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="deleteItem('links',${i})">🗑</button>
       </div>
     </div>`).join('');
 }
 
-// ─────────────────────────────────────────────────────────────
-// AGENDA
-// ─────────────────────────────────────────────────────────────
-function renderAgenda() {
-  const sorted = [...data.agenda].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
-  document.getElementById('agenda-empty').style.display = sorted.length ? 'none' : 'block';
-  document.getElementById('agenda-list').innerHTML = sorted.map((a) => {
-    const realIdx = data.agenda.indexOf(a);
-    const d = new Date(a.datum);
-    const isPast = d < new Date();
-    return `<div class="agenda-item" style="${isPast?'opacity:0.6':''}">
-      <div class="agenda-date">
-        <div class="agenda-day">${d.getDate()}</div>
-        <div class="agenda-month">${d.toLocaleString('nl',{month:'short'})}</div>
-      </div>
-      <div class="agenda-content">
-        <div class="agenda-title">${a.titel}</div>
-        <div class="agenda-meta">
-          ${a.tijd?'🕐 '+a.tijd+' &nbsp;':''}
-          ${a.persoon?'👤 '+a.persoon+' &nbsp;':''}
-          ${a.ruimte?'📍 '+a.ruimte:''}
-          ${a.notities?'<br>'+a.notities:''}
-        </div>
-      </div>
-      ${isPast?'<span class="badge badge-gray">Verleden</span>':'<span class="badge badge-green">Gepland</span>'}
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-ghost btn-sm" onclick="editItem('agenda',${realIdx})">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteItem('agenda',${realIdx})">🗑</button>
-      </div>
-    </div>`;
-  }).join('');
+// ── OVERZICHT ─────────────────────────────────────────────────
+function renderOverzicht(){
+  const now=today0();
+  const totaal=data.taken.length;
+  const afgerond=data.taken.filter(t=>t.status==='afgerond').length;
+  const bezig=data.taken.filter(t=>t.status==='bezig').length;
+  const teDoen=data.taken.filter(t=>t.status==='te doen').length;
+  const wacht=data.taken.filter(t=>t.status==='wacht op').length;
+  const overtijd=data.taken.filter(isOvertijd);
+  const pct=totaal?Math.round(afgerond/totaal*100):0;
+  const totalKosten=data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);
+  const budget=parseFloat(data.budget||0);
+
+  const sorted=[...data.taken].sort((a,b)=>{
+    const order={overtijd:0,bezig:1,'wacht op':2,'te doen':3,afgerond:4};
+    const ka=isOvertijd(a)?'overtijd':a.status; const kb=isOvertijd(b)?'overtijd':b.status;
+    return (order[ka]??5)-(order[kb]??5)||(new Date(a.eind||'9999')-new Date(b.eind||'9999'));
+  });
+
+  document.getElementById('overzicht-content').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px">
+      <div class="widget"><div class="widget-label">Voortgang</div><div class="widget-value accent">${pct}%</div><div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div></div>
+      <div class="widget"><div class="widget-label">Afgerond</div><div class="widget-value green">${afgerond}</div><div class="widget-sub">van ${totaal} taken</div></div>
+      <div class="widget"><div class="widget-label">Bezig</div><div class="widget-value accent">${bezig}</div></div>
+      <div class="widget"><div class="widget-label">Overtijd</div><div class="widget-value ${overtijd.length?'red':'green'}">${overtijd.length}</div></div>
+      <div class="widget"><div class="widget-label">Uitgegeven</div><div class="widget-value">€${fmt(totalKosten)}</div><div class="widget-sub">${budget?'van €'+fmt(budget):''}</div></div>
+    </div>
+
+    ${overtijd.length?`<div class="overzicht-section">
+      <div class="overzicht-section-title">🔴 Overtijd (${overtijd.length})</div>
+      ${overtijdTabel(overtijd)}
+    </div>`:''}
+
+    <div class="overzicht-section">
+      <div class="overzicht-section-title">🔵 Bezig / Wacht op (${bezig+wacht})</div>
+      ${taakTabelRows(sorted.filter(t=>t.status==='bezig'||t.status==='wacht op'))}
+    </div>
+
+    <div class="overzicht-section">
+      <div class="overzicht-section-title">⚪ Te doen (${teDoen})</div>
+      ${taakTabelRows(sorted.filter(t=>t.status==='te doen'))}
+    </div>
+
+    <div class="overzicht-section">
+      <div class="overzicht-section-title">✅ Afgerond (${afgerond})</div>
+      ${taakTabelRows(sorted.filter(t=>t.status==='afgerond'),true)}
+    </div>
+  `;
 }
 
-function addToAgendaFromTaak(idx) {
-  const t = data.taken[idx];
-  openModal('agenda', null, { titel: t.naam, persoon: t.persoon, ruimte: t.ruimte, _taakIdx: idx });
+function overtijdTabel(items){
+  if(!items.length) return '<div style="color:var(--text-muted);font-size:0.84rem;padding:8px 0">Geen overtijd items</div>';
+  return `<div class="card"><table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Deadline</th><th>Vertraging</th><th>Status</th></tr></thead><tbody>
+    ${items.map(t=>`<tr class="row-overtijd"><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.kleur||'#C0392B'}"></span></td><td><strong>${t.naam}</strong></td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td style="color:var(--red)">${fmtDate(t.eind)}</td><td><span class="badge badge-overtijd">${Math.abs(daysLeft(t))} dagen</span></td><td><span class="badge ${statusBadge(t.status)}">${t.status}</span></td></tr>`).join('')}
+  </tbody></table></div>`;
 }
 
-// ─────────────────────────────────────────────────────────────
-// MODAL SYSTEM
-// ─────────────────────────────────────────────────────────────
+function taakTabelRows(items,dim=false){
+  if(!items.length) return '<div style="color:var(--text-muted);font-size:0.84rem;padding:8px 0;margin-bottom:8px">Geen items</div>';
+  return `<div class="card"><table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Start</th><th>Deadline</th><th>Status</th></tr></thead><tbody>
+    ${items.map(t=>`<tr style="${dim?'opacity:.55':''}"><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.kleur||'#3A7D44'}"></span></td><td><strong>${t.naam}</strong>${t.notities?`<br><span style="font-size:0.72rem;color:var(--text-muted)">${t.notities}</span>`:''}</td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td>${fmtDate(t.start)}</td><td>${fmtDate(t.eind)}</td><td><span class="badge ${statusBadge(t.status)}">${t.status}</span></td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+// ── GENERIC MODAL ────────────────────────────────────────────
 const MODAL_CONFIGS = {
-  taak: {
-    title: 'Taak toevoegen',
-    editTitle: 'Taak bewerken',
-    fields: () => `
-      <div class="form-group"><label class="form-label">Taaknaam *</label><input class="form-input" id="f-naam" placeholder="Tegels leggen..."></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Ruimte</label>
-          <select class="form-select" id="f-ruimte">${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
-        <div class="form-group"><label class="form-label">Toegewezen aan</label>
-          <input class="form-input" id="f-persoon" placeholder="Naam"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Prioriteit</label>
-          <select class="form-select" id="f-prioriteit"><option value="hoog">Hoog</option><option value="middel" selected>Middel</option><option value="laag">Laag</option></select></div>
-        <div class="form-group"><label class="form-label">Status</label>
-          <select class="form-select" id="f-status"><option>te doen</option><option>bezig</option><option>wacht op</option><option>afgerond</option></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Extra info..."></textarea></div>`,
-    get: () => ({ naam: v('naam'), ruimte: v('ruimte'), persoon: v('persoon'), prioriteit: v('prioriteit'), status: v('status'), notities: v('notities') }),
-    set: (obj) => { sv('naam',obj.naam); sv('ruimte',obj.ruimte); sv('persoon',obj.persoon); sv('prioriteit',obj.prioriteit); sv('status',obj.status); sv('notities',obj.notities); },
-    validate: (obj) => obj.naam,
-    list: 'taken'
-  },
   kost: {
-    title: 'Uitgave toevoegen',
-    editTitle: 'Uitgave bewerken',
-    fields: () => `
-      <div class="form-group"><label class="form-label">Omschrijving *</label><input class="form-input" id="f-omschrijving" placeholder="Vloertegels badkamer..."></div>
+    title:'Uitgave toevoegen',editTitle:'Uitgave bewerken',
+    fields:()=>`
+      <div class="form-group"><label class="form-label">Omschrijving *</label><input class="form-input" id="f-omschrijving" placeholder="Vloertegels..."></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Bedrag (€) *</label><input class="form-input" id="f-bedrag" type="number" step="0.01" placeholder="0.00"></div>
         <div class="form-group"><label class="form-label">Datum</label><input class="form-input" id="f-datum" type="date"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Categorie</label>
-          <select class="form-select" id="f-categorie">${KOSTEN_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
-        <div class="form-group"><label class="form-label">Ruimte</label>
-          <select class="form-select" id="f-ruimte"><option value="">—</option>${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">Categorie</label><select class="form-select" id="f-categorie">${KOSTEN_CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">Ruimte</label><select class="form-select" id="f-ruimte"><option value="">—</option>${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
       </div>
-      <div class="form-group"><label class="form-label">Leverancier</label>
-        <select class="form-select" id="f-leverancier"><option value="">—</option>${data.leveranciers.map(l=>`<option>${l.naam}</option>`).join('')}</select></div>
-      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Factuur nr, link..."></textarea></div>`,
-    get: () => ({ omschrijving: v('omschrijving'), bedrag: v('bedrag'), datum: v('datum'), categorie: v('categorie'), ruimte: v('ruimte'), leverancier: v('leverancier'), notities: v('notities') }),
-    set: (obj) => { sv('omschrijving',obj.omschrijving); sv('bedrag',obj.bedrag); sv('datum',obj.datum); sv('categorie',obj.categorie); sv('ruimte',obj.ruimte); sv('leverancier',obj.leverancier); sv('notities',obj.notities); },
-    validate: (obj) => obj.omschrijving && obj.bedrag,
-    list: 'kosten'
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities"></textarea></div>`,
+    get:()=>({omschrijving:v('omschrijving'),bedrag:v('bedrag'),datum:v('datum'),categorie:v('categorie'),ruimte:v('ruimte'),notities:v('notities')}),
+    set:(o)=>{sv('omschrijving',o.omschrijving);sv('bedrag',o.bedrag);sv('datum',o.datum);sv('categorie',o.categorie);sv('ruimte',o.ruimte);sv('notities',o.notities);},
+    validate:(o)=>o.omschrijving&&o.bedrag, list:'kosten'
   },
   leverancier: {
-    title: 'Leverancier toevoegen',
-    editTitle: 'Leverancier bewerken',
-    fields: () => `
+    title:'Leverancier toevoegen',editTitle:'Leverancier bewerken',
+    fields:()=>`
       <div class="form-row">
         <div class="form-group"><label class="form-label">Naam *</label><input class="form-input" id="f-naam" placeholder="Jan de Vries"></div>
         <div class="form-group"><label class="form-label">Bedrijf</label><input class="form-input" id="f-bedrijf" placeholder="Installatiebedrijf X"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Telefoon</label><input class="form-input" id="f-telefoon" placeholder="06-12345678" type="tel"></div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" placeholder="jan@voorbeeld.nl" type="email"></div>
+        <div class="form-group"><label class="form-label">Telefoon</label><input class="form-input" id="f-telefoon" type="tel"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" type="email"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Specialisme</label><input class="form-input" id="f-specialisme" placeholder="Loodgieter, Tegelzetter..."></div>
-        <div class="form-group"><label class="form-label">Status</label>
-          <select class="form-select" id="f-status"><option value="offerte">Offerte gevraagd</option><option value="bevestigd">Bevestigd</option><option value="afgerond">Afgerond</option><option value="geannuleerd">Geannuleerd</option></select></div>
+        <div class="form-group"><label class="form-label">Specialisme</label><input class="form-input" id="f-specialisme" placeholder="Loodgieter..."></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="f-status"><option value="offerte">Offerte gevraagd</option><option value="bevestigd">Bevestigd</option><option value="afgerond">Afgerond</option><option value="geannuleerd">Geannuleerd</option></select></div>
       </div>
-      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Offerte bedrag, referentie..."></textarea></div>`,
-    get: () => ({ naam: v('naam'), bedrijf: v('bedrijf'), telefoon: v('telefoon'), email: v('email'), specialisme: v('specialisme'), status: v('status'), notities: v('notities') }),
-    set: (obj) => { sv('naam',obj.naam); sv('bedrijf',obj.bedrijf); sv('telefoon',obj.telefoon); sv('email',obj.email); sv('specialisme',obj.specialisme); sv('status',obj.status); sv('notities',obj.notities); },
-    validate: (obj) => obj.naam,
-    list: 'leveranciers'
+      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities"></textarea></div>`,
+    get:()=>({naam:v('naam'),bedrijf:v('bedrijf'),telefoon:v('telefoon'),email:v('email'),specialisme:v('specialisme'),status:v('status'),notities:v('notities')}),
+    set:(o)=>{sv('naam',o.naam);sv('bedrijf',o.bedrijf);sv('telefoon',o.telefoon);sv('email',o.email);sv('specialisme',o.specialisme);sv('status',o.status);sv('notities',o.notities);},
+    validate:(o)=>o.naam, list:'leveranciers'
   },
   link: {
-    title: 'Link opslaan',
-    editTitle: 'Link bewerken',
-    fields: () => `
+    title:'Link opslaan',editTitle:'Link bewerken',
+    fields:()=>`
       <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="f-titel" placeholder="Moodboard badkamer"></div>
-      <div class="form-group"><label class="form-label">URL *</label><input class="form-input" id="f-url" placeholder="https://..." type="url"></div>
-      <div class="form-group"><label class="form-label">Omschrijving</label><input class="form-input" id="f-omschrijving" placeholder="Korte beschrijving..."></div>
-      <div class="form-group"><label class="form-label">Tag / Ruimte</label><input class="form-input" id="f-tag" placeholder="Badkamer, Inspiratie..."></div>`,
-    get: () => ({ titel: v('titel'), url: v('url'), omschrijving: v('omschrijving'), tag: v('tag') }),
-    set: (obj) => { sv('titel',obj.titel); sv('url',obj.url); sv('omschrijving',obj.omschrijving); sv('tag',obj.tag); },
-    validate: (obj) => obj.titel && obj.url,
-    list: 'links'
-  },
-  agenda: {
-    title: 'Agenda item toevoegen',
-    editTitle: 'Agenda item bewerken',
-    fields: () => `
-      <div class="form-group"><label class="form-label">Titel *</label><input class="form-input" id="f-titel" placeholder="Afspraak tegelzetter..."></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Datum *</label><input class="form-input" id="f-datum" type="date"></div>
-        <div class="form-group"><label class="form-label">Tijd</label><input class="form-input" id="f-tijd" type="time"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Persoon / Leverancier</label><input class="form-input" id="f-persoon" placeholder="Naam..."></div>
-        <div class="form-group"><label class="form-label">Ruimte / Locatie</label>
-          <select class="form-select" id="f-ruimte"><option value="">—</option>${RUIMTES.map(r=>`<option>${r}</option>`).join('')}</select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Notities</label><textarea class="form-textarea" id="f-notities" placeholder="Extra info..."></textarea></div>`,
-    get: () => ({ titel: v('titel'), datum: v('datum'), tijd: v('tijd'), persoon: v('persoon'), ruimte: v('ruimte'), notities: v('notities') }),
-    set: (obj) => { sv('titel',obj.titel); sv('datum',obj.datum); sv('tijd',obj.tijd); sv('persoon',obj.persoon); sv('ruimte',obj.ruimte); sv('notities',obj.notities); },
-    validate: (obj) => obj.titel && obj.datum,
-    list: 'agenda'
+      <div class="form-group"><label class="form-label">URL *</label><input class="form-input" id="f-url" type="url" placeholder="https://..."></div>
+      <div class="form-group"><label class="form-label">Omschrijving</label><input class="form-input" id="f-omschrijving" placeholder="Korte beschrijving"></div>
+      <div class="form-group"><label class="form-label">Tag</label><input class="form-input" id="f-tag" placeholder="Badkamer, Inspiratie..."></div>`,
+    get:()=>({titel:v('titel'),url:v('url'),omschrijving:v('omschrijving'),tag:v('tag')}),
+    set:(o)=>{sv('titel',o.titel);sv('url',o.url);sv('omschrijving',o.omschrijving);sv('tag',o.tag);},
+    validate:(o)=>o.titel&&o.url, list:'links'
   }
 };
 
-function v(id) { const el = document.getElementById('f-'+id); return el ? el.value.trim() : ''; }
-function sv(id, val) { const el = document.getElementById('f-'+id); if(el && val!==undefined) el.value = val||''; }
+function v(id){const el=document.getElementById('f-'+id);return el?el.value.trim():'';}
+function sv(id,val){const el=document.getElementById('f-'+id);if(el&&val!==undefined)el.value=val||'';}
 
-function openModal(type, idx = null, prefill = null) {
-  currentModal = type; editIndex = idx;
-  const cfg = MODAL_CONFIGS[type];
-  document.getElementById('modal-title').textContent = idx !== null ? cfg.editTitle : cfg.title;
-  document.getElementById('modal-body').innerHTML = cfg.fields();
-
-  // Set today's date for date fields if new
-  const dateEl = document.getElementById('f-datum');
-  if (dateEl && idx === null && !prefill?.datum) dateEl.value = new Date().toISOString().split('T')[0];
-
-  if (idx !== null) { cfg.set(data[cfg.list][idx]); }
-  if (prefill) { Object.entries(prefill).forEach(([k,val]) => { if(k!=='_taakIdx') sv(k.replace('f-',''),val); }); }
+function openModal(type,idx=null){
+  currentModal=type;editModalIdx=idx;
+  const cfg=MODAL_CONFIGS[type];
+  document.getElementById('modal-title').textContent=idx!==null?cfg.editTitle:cfg.title;
+  document.getElementById('modal-body').innerHTML=cfg.fields();
+  const dateEl=document.getElementById('f-datum');
+  if(dateEl&&idx===null) dateEl.value=new Date().toISOString().split('T')[0];
+  if(idx!==null) cfg.set(data[cfg.list][idx]);
   document.getElementById('modal-overlay').classList.add('open');
 }
-
-function editItem(type, idx) { openModal(type, idx); }
-
-function closeModal(e) { if(e.target.id==='modal-overlay') closeModalDirect(); }
-function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); currentModal=null; editIndex=null; }
-
-function saveModal() {
-  const cfg = MODAL_CONFIGS[currentModal];
-  const obj = cfg.get();
-  if (!cfg.validate(obj)) { toast('Vul verplichte velden in'); return; }
-
-  if (editIndex !== null) { data[cfg.list][editIndex] = obj; }
-  else { data[cfg.list].push(obj); }
-
-  save(); closeModalDirect();
-  renderAll();
-  toast(editIndex !== null ? 'Opgeslagen ✓' : 'Toegevoegd ✓');
+function editItem(type,idx){openModal(type,idx);}
+function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');currentModal=null;editModalIdx=null;}
+function saveModal(){
+  const cfg=MODAL_CONFIGS[currentModal];const obj=cfg.get();
+  if(!cfg.validate(obj)){toast('Vul verplichte velden in');return;}
+  if(editModalIdx!==null) data[cfg.list][editModalIdx]=obj;
+  else data[cfg.list].push(obj);
+  save();closeModalDirect();renderAll();toast(editModalIdx!==null?'Opgeslagen ✓':'Toegevoegd ✓');
 }
+function deleteItem(list,idx){if(!confirm('Verwijderen?'))return;data[list].splice(idx,1);save();renderAll();toast('Verwijderd');}
 
-function deleteItem(list, idx) {
-  if (!confirm('Weet je het zeker?')) return;
-  data[list].splice(idx, 1); save(); renderAll(); toast('Verwijderd');
-}
+// ── PRINT ────────────────────────────────────────────────────
+function printSection(section){
+  const titles={taken:'Taken & Planning',tijdlijn:'Tijdlijn',kosten:'Kosten & Budget',leveranciers:'Leveranciers'};
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"><title>Verbouwing — ${titles[section]||section}</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Arial,sans-serif;color:#1C1A17;padding:28px;font-size:13px}h1{font-size:17px;font-weight:600;margin-bottom:3px}.meta{color:#888;font-size:11px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin-bottom:18px}th{text-align:left;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;padding:5px 9px;border-bottom:2px solid #E5E7EB}td{padding:9px 9px;border-bottom:1px solid #E5E7EB;font-size:12px;vertical-align:top}.badge{display:inline-block;padding:1px 6px;border-radius:99px;font-size:10px;font-weight:600;border:1px solid #ddd}.widget-row{display:flex;gap:14px;margin-bottom:18px}.widget{border:1px solid #E5E7EB;border-radius:7px;padding:12px;min-width:120px}.widget-label{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}.widget-value{font-size:20px;font-weight:700}select{appearance:none;border:none;background:none;font-size:12px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%}</style>
+  </head><body><h1>Verbouwing — ${titles[section]||section}</h1><div class="meta">Geprint op ${new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'})}</div>`);
 
-// ─────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────
-function fmt(n) { return Number(n).toLocaleString('nl-NL', {minimumFractionDigits:2,maximumFractionDigits:2}); }
-
-function statusBadge(s) {
-  return {'te doen':'badge-gray','bezig':'badge-yellow','wacht op':'badge-blue','afgerond':'badge-green'}[s]||'badge-gray';
-}
-
-// ─────────────────────────────────────────────────────────────
-// TIJDLIJN
-// ─────────────────────────────────────────────────────────────
-let tlYear  = new Date().getFullYear();
-let tlMonth = new Date().getMonth(); // 0-indexed
-
-const TL_COLORS = [
-  '#C17B3A','#2874A6','#3A7D44','#8E44AD',
-  '#C0392B','#16A085','#D35400','#2C3E50'
-];
-
-function tlNav(dir) {
-  tlMonth += dir;
-  if (tlMonth > 11) { tlMonth = 0; tlYear++; }
-  if (tlMonth < 0)  { tlMonth = 11; tlYear--; }
-  renderTijdlijn();
-}
-
-function renderTijdlijn() {
-  const items = data.agenda;
-  const empty = document.getElementById('tijdlijn-empty');
-  const wrap  = document.getElementById('tijdlijn-wrap');
-  const canvas = document.getElementById('tijdlijn-canvas');
-
-  // Month bounds
-  const firstDay = new Date(tlYear, tlMonth, 1);
-  const lastDay  = new Date(tlYear, tlMonth + 1, 0);
-  const daysInMonth = lastDay.getDate();
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  // Label
-  document.getElementById('tl-month-label').textContent =
-    firstDay.toLocaleString('nl', { month: 'long', year: 'numeric' });
-
-  // Filter items that fall (even partially) in this month
-  const visible = items.filter(a => {
-    if (!a.datum) return false;
-    const d = new Date(a.datum); d.setHours(0,0,0,0);
-    return d >= firstDay && d <= lastDay;
-  }).sort((a,b) => new Date(a.datum) - new Date(b.datum));
-
-  if (items.length === 0) {
-    empty.style.display = 'block'; wrap.style.display = 'none'; return;
-  }
-  empty.style.display = 'none'; wrap.style.display = 'block';
-
-  // Day width (px)
-  const DAY_W = Math.max(28, Math.floor((Math.min(window.innerWidth - 280, 900)) / daysInMonth));
-
-  // Detect overlaps: group items by day
-  const byDay = {};
-  visible.forEach(a => {
-    const key = a.datum;
-    byDay[key] = byDay[key] || [];
-    byDay[key].push(a);
-  });
-  const overlapDays = Object.entries(byDay).filter(([,arr]) => arr.length > 1).map(([k]) => k);
-
-  // Build overlap badges
-  let overlapHtml = '';
-  if (overlapDays.length) {
-    overlapHtml = overlapDays.map(d => {
-      const dd = new Date(d);
-      return `<span class="tl-overlap-badge">⚠️ Overlap op ${dd.toLocaleDateString('nl',{day:'numeric',month:'short'})}: ${byDay[d].map(a=>a.titel).join(' & ')}</span>`;
-    }).join('');
-    overlapHtml = `<div style="margin-bottom:12px">${overlapHtml}</div>`;
-  }
-
-  // Header row: day numbers
-  let headerDays = '';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dt = new Date(tlYear, tlMonth, d);
-    const isToday = dt.getTime() === today.getTime();
-    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
-    headerDays += `<div class="tl-day-header ${isToday?'today':''} ${isWeekend?'weekend':''}" style="width:${DAY_W}px">${d}</div>`;
-  }
-
-  // Weekday row
-  let headerWd = '';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dt = new Date(tlYear, tlMonth, d);
-    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
-    const names = ['zo','ma','di','wo','do','vr','za'];
-    headerWd += `<div class="tl-day-header ${isWeekend?'weekend':''}" style="width:${DAY_W}px;font-size:0.65rem">${names[dt.getDay()]}</div>`;
-  }
-
-  // Rows
-  let rowsHtml = '';
-  // Show all items OR a "geen items" row
-  const rowItems = visible.length > 0 ? visible : [];
-
-  // If no items this month but items exist in other months, show placeholder rows
-  if (rowItems.length === 0) {
-    rowsHtml = `<div class="tl-row">
-      <div class="tl-row-label" style="color:var(--text-muted);font-size:0.82rem">Geen items deze maand</div>
-      <div class="tl-row-track" style="width:${daysInMonth*DAY_W}px"></div>
-    </div>`;
-  }
-
-  rowItems.forEach((a, idx) => {
-    const itemDate = new Date(a.datum); itemDate.setHours(0,0,0,0);
-    const dayNum = itemDate.getDate(); // 1-based
-    const dayIdx = dayNum - 1;        // 0-based
-    const isOverlap = overlapDays.includes(a.datum);
-    const color = TL_COLORS[idx % TL_COLORS.length];
-
-    // Background grid cells
-    let bgCells = '';
-    for (let d = 1; d <= daysInMonth; d++) {
-      const dt = new Date(tlYear, tlMonth, d);
-      const isToday = dt.getTime() === today.getTime();
-      const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
-      bgCells += `<div class="tl-day-bg ${isToday?'today':''} ${isWeekend?'weekend':''}" style="left:${(d-1)*DAY_W}px;width:${DAY_W}px"></div>`;
-    }
-
-    // Today line
-    const todayInMonth = today >= firstDay && today <= lastDay;
-    const todayLine = todayInMonth
-      ? `<div class="tl-today-line" style="left:${(today.getDate()-0.5)*DAY_W}px"></div>` : '';
-
-    // Bar: single-day event — centered dot/bar
-    const barLeft = dayIdx * DAY_W + 3;
-    const barWidth = DAY_W - 6;
-    const label = a.titel.length > 12 ? a.titel.slice(0,11)+'…' : a.titel;
-
-    rowsHtml += `
-    <div class="tl-row" title="${a.titel}${a.tijd?' om '+a.tijd:''}${a.persoon?' — '+a.persoon:''}">
-      <div class="tl-row-label">
-        <strong>${a.titel}</strong>
-        <span>${a.tijd||''} ${a.persoon?'· '+a.persoon:''}</span>
-      </div>
-      <div class="tl-row-track" style="width:${daysInMonth*DAY_W}px">
-        ${bgCells}
-        ${todayLine}
-        ${isOverlap ? `<div class="tl-overlap-warn" style="left:${dayIdx*DAY_W}px;width:${DAY_W}px"></div>` : ''}
-        <div class="tl-bar" style="left:${barLeft}px;width:${barWidth}px;background:${color}" title="${a.titel}">
-          ${barWidth > 40 ? label : ''}
-        </div>
-      </div>
-    </div>`;
-  });
-
-  canvas.innerHTML = `
-    ${overlapHtml}
-    <div style="display:flex;flex-direction:column;min-width:${160 + daysInMonth*DAY_W}px">
-      <div class="tl-header-row">
-        <div class="tl-label-col">Item</div>
-        <div class="tl-days-wrap">${headerWd}</div>
-      </div>
-      <div class="tl-header-row" style="border-bottom:1px solid var(--border);margin-bottom:0">
-        <div class="tl-label-col"></div>
-        <div class="tl-days-wrap">${headerDays}</div>
-      </div>
-      ${rowsHtml}
-    </div>`;
-}
-
-
-function printSection(section) {
-  const titles = { taken: 'Taken', kosten: 'Kosten & Budget', leveranciers: 'Leveranciers', agenda: 'Agenda', tijdlijn: 'Tijdlijn' };
-  const el = document.getElementById('tab-' + section);
-  if (!el) return;
-
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html lang="nl"><head>
-    <meta charset="UTF-8">
-    <title>Verbouwing — ${titles[section]}</title>
-    <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1C1A17; padding: 32px; font-size: 13px; }
-      h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-      .meta { color: #888; font-size: 11px; margin-bottom: 24px; }
-      table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-      th { text-align: left; font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 10px; border-bottom: 2px solid #E5E7EB; }
-      td { padding: 10px 10px; border-bottom: 1px solid #E5E7EB; font-size: 12px; vertical-align: top; }
-      .badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 10px; font-weight: 600; border: 1px solid #ddd; }
-      .widget-row { display: flex; gap: 16px; margin-bottom: 20px; }
-      .widget { border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px; min-width: 140px; }
-      .widget-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-      .widget-value { font-size: 22px; font-weight: 700; }
-      .agenda-item { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid #E5E7EB; }
-      .agenda-day { font-size: 20px; font-weight: 700; color: #C17B3A; min-width: 28px; text-align: center; line-height: 1; }
-      .agenda-month { font-size: 9px; color: #888; text-transform: uppercase; text-align: center; }
-      .link-item { padding: 8px 0; border-bottom: 1px solid #E5E7EB; }
-      .link-url { color: #2874A6; font-size: 11px; }
-      select { appearance: none; border: none; background: none; font-size: 12px; }
-      @media print { body { padding: 16px; } }
-    </style>
-  </head><body>
-    <h1>Verbouwing — ${titles[section]}</h1>
-    <div class="meta">Geprint op ${new Date().toLocaleDateString('nl-NL', {day:'numeric',month:'long',year:'numeric'})}</div>
-  `);
-
-  if (section === 'taken') {
-    win.document.write(`<table><thead><tr><th>Taak</th><th>Ruimte</th><th>Toegewezen aan</th><th>Prioriteit</th><th>Status</th></tr></thead><tbody>`);
-    data.taken.forEach(t => {
-      win.document.write(`<tr><td><strong>${t.naam}</strong>${t.notities?'<br><span style="color:#888;font-size:11px">'+t.notities+'</span>':''}</td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td>${t.prioriteit||'—'}</td><td>${t.status||'—'}</td></tr>`);
+  if(section==='taken'){
+    win.document.write('<table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Start</th><th>Deadline</th><th>Prioriteit</th><th>Status</th></tr></thead><tbody>');
+    [...data.taken].sort((a,b)=>new Date(a.eind||'9999')-new Date(b.eind||'9999')).forEach(t=>{
+      const ot=isOvertijd(t);
+      win.document.write(`<tr style="${ot?'background:#FFF5F5':''}"><td><span class="dot" style="background:${t.kleur||'#3A7D44'}"></span></td><td><strong>${t.naam}</strong></td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td>${fmtDate(t.start)}</td><td style="${ot?'color:#C0392B;font-weight:600':''}">${fmtDate(t.eind)}${ot?' ⚠️':''}</td><td>${t.prioriteit||'—'}</td><td>${t.status||'—'}</td></tr>`);
     });
     win.document.write('</tbody></table>');
   }
-
-  if (section === 'kosten') {
-    const total = data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);
-    const budget = parseFloat(data.budget||0);
-    win.document.write(`<div class="widget-row">
-      <div class="widget"><div class="widget-label">Totaal uitgegeven</div><div class="widget-value">€${fmt(total)}</div></div>
-      ${budget?`<div class="widget"><div class="widget-label">Budget</div><div class="widget-value">€${fmt(budget)}</div></div><div class="widget"><div class="widget-label">Resterend</div><div class="widget-value" style="color:${total>budget?'#C0392B':'#3A7D44'}">€${fmt(budget-total)}</div></div>`:''}
-    </div>`);
-    win.document.write(`<table><thead><tr><th>Omschrijving</th><th>Categorie</th><th>Ruimte</th><th>Bedrag</th><th>Datum</th></tr></thead><tbody>`);
-    [...data.kosten].sort((a,b)=>new Date(b.datum)-new Date(a.datum)).forEach(k => {
-      win.document.write(`<tr><td><strong>${k.omschrijving}</strong>${k.notities?'<br><span style="color:#888;font-size:11px">'+k.notities+'</span>':''}</td><td>${k.categorie||'—'}</td><td>${k.ruimte||'—'}</td><td><strong>€${fmt(parseFloat(k.bedrag||0))}</strong></td><td>${k.datum||'—'}</td></tr>`);
-    });
+  if(section==='tijdlijn'){
+    const firstDay=new Date(tlYear,tlMonth,1);
+    win.document.write(`<div style="font-size:13px;font-weight:600;margin-bottom:14px">${firstDay.toLocaleString('nl',{month:'long',year:'numeric'})}</div>`);
+    win.document.write('<table><thead><tr><th></th><th>Item</th><th>Persoon</th><th>Start</th><th>Eind</th><th>Status</th></tr></thead><tbody>');
+    const vis=data.taken.filter(t=>{if(!t.start&&!t.eind)return false;const s=new Date(t.start||t.eind);const e=new Date(t.eind||t.start);return s<=new Date(tlYear,tlMonth+1,0)&&e>=firstDay;}).sort((a,b)=>new Date(a.start||a.eind)-new Date(b.start||b.eind));
+    vis.forEach(t=>win.document.write(`<tr><td><span class="dot" style="background:${t.kleur||'#3A7D44'}"></span></td><td><strong>${t.naam}</strong>${t.notities?`<br><span style="font-size:10px;color:#888">${t.notities}</span>`:''}</td><td>${t.persoon||'—'}</td><td>${fmtDate(t.start)}</td><td>${fmtDate(t.eind)}</td><td>${t.status||'—'}</td></tr>`));
     win.document.write('</tbody></table>');
   }
-
-  if (section === 'leveranciers') {
-    win.document.write(`<table><thead><tr><th>Naam</th><th>Bedrijf</th><th>Telefoon</th><th>Email</th><th>Specialisme</th><th>Status</th></tr></thead><tbody>`);
-    data.leveranciers.forEach(l => {
-      win.document.write(`<tr><td><strong>${l.naam}</strong></td><td>${l.bedrijf||'—'}</td><td>${l.telefoon||'—'}</td><td>${l.email||'—'}</td><td>${l.specialisme||'—'}</td><td>${l.status||'—'}</td></tr>`);
-    });
+  if(section==='kosten'){
+    const total=data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);const budget=parseFloat(data.budget||0);
+    win.document.write(`<div class="widget-row"><div class="widget"><div class="widget-label">Uitgegeven</div><div class="widget-value">€${fmt(total)}</div></div>${budget?`<div class="widget"><div class="widget-label">Budget</div><div class="widget-value">€${fmt(budget)}</div></div><div class="widget"><div class="widget-label">Resterend</div><div class="widget-value" style="color:${total>budget?'#C0392B':'#3A7D44'}">€${fmt(budget-total)}</div></div>`:''}</div>`);
+    win.document.write('<table><thead><tr><th>Omschrijving</th><th>Categorie</th><th>Ruimte</th><th>Bedrag</th><th>Datum</th></tr></thead><tbody>');
+    [...data.kosten].sort((a,b)=>new Date(b.datum)-new Date(a.datum)).forEach(k=>win.document.write(`<tr><td><strong>${k.omschrijving}</strong></td><td>${k.categorie||'—'}</td><td>${k.ruimte||'—'}</td><td><strong>€${fmt(parseFloat(k.bedrag||0))}</strong></td><td>${k.datum||'—'}</td></tr>`));
     win.document.write('</tbody></table>');
   }
-
-  if (section === 'agenda') {
-    const sorted = [...data.agenda].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
-    sorted.forEach(a => {
-      const d = new Date(a.datum);
-      win.document.write(`<div class="agenda-item">
-        <div><div class="agenda-day">${d.getDate()}</div><div class="agenda-month">${d.toLocaleString('nl',{month:'short'})}</div></div>
-        <div><strong>${a.titel}</strong><br>
-          <span style="color:#888;font-size:11px">${a.tijd||''} ${a.persoon?'— '+a.persoon:''} ${a.ruimte?'— '+a.ruimte:''}</span>
-          ${a.notities?'<br><span style="font-size:11px">'+a.notities+'</span>':''}
-        </div>
-      </div>`);
-    });
-  }
-
-  if (section === 'tijdlijn') {
-    const firstDay = new Date(tlYear, tlMonth, 1);
-    const monthLabel = firstDay.toLocaleString('nl', { month: 'long', year: 'numeric' });
-    win.document.write(`<h2 style="font-size:14px;margin-bottom:16px">${monthLabel}</h2>`);
-    const visItems = data.agenda.filter(a => {
-      if (!a.datum) return false;
-      const d = new Date(a.datum); d.setHours(0,0,0,0);
-      return d >= firstDay && d <= new Date(tlYear, tlMonth + 1, 0);
-    }).sort((a,b) => new Date(a.datum)-new Date(b.datum));
-    win.document.write('<table><thead><tr><th>Datum</th><th>Tijd</th><th>Item</th><th>Persoon</th><th>Locatie</th></tr></thead><tbody>');
-    visItems.forEach(a => {
-      const d = new Date(a.datum);
-      win.document.write(`<tr><td>${d.toLocaleDateString('nl',{day:'numeric',month:'long'})}</td><td>${a.tijd||'—'}</td><td><strong>${a.titel}</strong>${a.notities?'<br><span style="color:#888;font-size:11px">'+a.notities+'</span>':''}</td><td>${a.persoon||'—'}</td><td>${a.ruimte||'—'}</td></tr>`);
-    });
+  if(section==='leveranciers'){
+    win.document.write('<table><thead><tr><th>Naam</th><th>Bedrijf</th><th>Telefoon</th><th>Email</th><th>Specialisme</th><th>Status</th></tr></thead><tbody>');
+    data.leveranciers.forEach(l=>win.document.write(`<tr><td><strong>${l.naam}</strong></td><td>${l.bedrijf||'—'}</td><td>${l.telefoon||'—'}</td><td>${l.email||'—'}</td><td>${l.specialisme||'—'}</td><td>${l.status||'—'}</td></tr>`));
     win.document.write('</tbody></table>');
   }
-
   win.document.write('</body></html>');
-  win.document.close();
-  win.focus();
-  setTimeout(() => win.print(), 300);
+  win.document.close();win.focus();setTimeout(()=>win.print(),300);
 }
 
-let toastTimer;
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+function printOverzicht(){
+  const now=today0();
+  const totaal=data.taken.length;
+  const afgerond=data.taken.filter(t=>t.status==='afgerond').length;
+  const pct=totaal?Math.round(afgerond/totaal*100):0;
+  const totalKosten=data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);
+  const budget=parseFloat(data.budget||0);
+  const overtijd=data.taken.filter(isOvertijd);
+  const bezig=data.taken.filter(t=>t.status==='bezig'||t.status==='wacht op');
+  const teDoen=data.taken.filter(t=>t.status==='te doen');
+  const done=data.taken.filter(t=>t.status==='afgerond');
+
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8"><title>Verbouwing Overzicht</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Helvetica Neue',Arial,sans-serif;color:#1C1A17;padding:28px;font-size:12px}h1{font-size:20px;font-weight:700;margin-bottom:2px}.subtitle{color:#888;font-size:11px;margin-bottom:22px}h2{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #E5E7EB;padding-bottom:5px;margin:20px 0 10px}table{width:100%;border-collapse:collapse;margin-bottom:14px}th{text-align:left;font-size:9px;font-weight:700;color:#888;text-transform:uppercase;padding:4px 8px;border-bottom:1px solid #E5E7EB}td{padding:7px 8px;border-bottom:1px solid #f0f0f0;font-size:11px;vertical-align:top}.stats{display:flex;gap:12px;margin-bottom:18px}.stat{border:1px solid #E5E7EB;border-radius:6px;padding:10px 14px;min-width:100px}.stat-label{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}.stat-value{font-size:18px;font-weight:700}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px}.ot-row{background:#FFF5F5}.bar{height:10px;border-radius:99px;background:#E5E7EB;margin-top:4px;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:#C17B3A}@media print{body{padding:16px}}</style>
+  </head><body>
+  <h1>${data.project||'Verbouwing'} — Overzicht</h1>
+  <div class="subtitle">Stand van zaken op ${now.toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'})}</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Voortgang</div><div class="stat-value" style="color:#C17B3A">${pct}%</div><div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div></div>
+    <div class="stat"><div class="stat-label">Afgerond</div><div class="stat-value" style="color:#3A7D44">${afgerond}</div><div class="stat-label">van ${totaal} taken</div></div>
+    <div class="stat"><div class="stat-label">Overtijd</div><div class="stat-value" style="color:${overtijd.length?'#C0392B':'#3A7D44'}">${overtijd.length}</div></div>
+    <div class="stat"><div class="stat-label">Uitgegeven</div><div class="stat-value">€${fmt(totalKosten)}</div>${budget?`<div class="stat-label">van €${fmt(budget)}</div>`:''}    </div>
+  </div>`);
+
+  if(overtijd.length){
+    win.document.write('<h2>🔴 Overtijd</h2><table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Deadline</th><th>Vertraging</th></tr></thead><tbody>');
+    overtijd.forEach(t=>win.document.write(`<tr class="ot-row"><td><span class="dot" style="background:${t.kleur||'#C0392B'}"></span></td><td><strong>${t.naam}</strong></td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td style="color:#C0392B">${fmtDate(t.eind)}</td><td>${Math.abs(daysLeft(t))} dagen</td></tr>`));
+    win.document.write('</tbody></table>');
+  }
+  if(bezig.length){
+    win.document.write('<h2>🔵 Bezig / Wacht op</h2><table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Deadline</th><th>Status</th></tr></thead><tbody>');
+    bezig.forEach(t=>win.document.write(`<tr><td><span class="dot" style="background:${t.kleur||'#2874A6'}"></span></td><td><strong>${t.naam}</strong></td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td>${fmtDate(t.eind)}</td><td>${t.status}</td></tr>`));
+    win.document.write('</tbody></table>');
+  }
+  if(teDoen.length){
+    win.document.write('<h2>⚪ Te doen</h2><table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th><th>Start</th><th>Deadline</th></tr></thead><tbody>');
+    [...teDoen].sort((a,b)=>new Date(a.eind||'9999')-new Date(b.eind||'9999')).forEach(t=>win.document.write(`<tr><td><span class="dot" style="background:${t.kleur||'#3A7D44'}"></span></td><td><strong>${t.naam}</strong></td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td>${fmtDate(t.start)}</td><td>${fmtDate(t.eind)}</td></tr>`));
+    win.document.write('</tbody></table>');
+  }
+  if(done.length){
+    win.document.write('<h2>✅ Afgerond</h2><table><thead><tr><th></th><th>Taak</th><th>Ruimte</th><th>Persoon</th></tr></thead><tbody>');
+    done.forEach(t=>win.document.write(`<tr style="opacity:.55"><td><span class="dot" style="background:${t.kleur||'#3A7D44'}"></span></td><td>${t.naam}</td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td></tr>`));
+    win.document.write('</tbody></table>');
+  }
+  win.document.write('</body></html>');
+  win.document.close();win.focus();setTimeout(()=>win.print(),300);
 }
 </script>
 </body>
