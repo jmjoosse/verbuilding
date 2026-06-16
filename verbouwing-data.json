@@ -12,7 +12,16 @@
   "kosten": [],
   "leveranciers": [],
   "links": [],
-  "agenda": [],
+  "agenda": [
+    {
+      "titel": "Afspraak marquardt",
+      "datum": "2026-06-19",
+      "tijd": "16:00",
+      "persoon": "marquardt",
+      "ruimte": "Keuken",
+      "notities": "go/nogo voor keuken"
+    }
+  ],
   "budget": 80000,
   "project": "Verbouwing"
 }
