@@ -10,7 +10,17 @@
     }
   ],
   "kosten": [],
-  "leveranciers": [],
+  "leveranciers": [
+    {
+      "naam": "Nev",
+      "bedrijf": "Marquardt",
+      "telefoon": "",
+      "email": "",
+      "specialisme": "Keuken",
+      "status": "offerte",
+      "notities": ""
+    }
+  ],
   "links": [],
   "agenda": [
     {
