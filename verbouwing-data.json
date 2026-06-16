@@ -9,7 +9,17 @@
       "notities": "Keuken zoeken en akkoord geven"
     }
   ],
-  "kosten": [],
+  "kosten": [
+    {
+      "omschrijving": "Wc papier",
+      "bedrag": "1.50",
+      "datum": "2026-06-16",
+      "categorie": "Materiaal",
+      "ruimte": "Overig",
+      "leverancier": "",
+      "notities": ""
+    }
+  ],
   "leveranciers": [
     {
       "naam": "Nev",
