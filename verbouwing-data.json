@@ -30,7 +30,14 @@
       "notities": ""
     }
   ],
-  "links": [],
+  "links": [
+    {
+      "titel": "Firma Hout en Staal",
+      "url": "https://www.firmahoutenstaal.nl/",
+      "omschrijving": "Schuifdeuren",
+      "tag": ""
+    }
+  ],
   "agenda": [
     {
       "titel": "Afspraak marquardt",
