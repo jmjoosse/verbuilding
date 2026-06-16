@@ -1,5 +1,14 @@
 {
-  "taken": [],
+  "taken": [
+    {
+      "naam": "Keuken zoeken",
+      "ruimte": "Keuken",
+      "persoon": "Jarno",
+      "prioriteit": "hoog",
+      "status": "te doen",
+      "notities": "Keuken zoeken en akkoord geven"
+    }
+  ],
   "kosten": [],
   "leveranciers": [],
   "links": [],
