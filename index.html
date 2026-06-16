@@ -8,10 +8,10 @@
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg: #F7F5F0;
-    --surface: #FFFFFF;
-    --surface2: #F0EDE6;
-    --border: #E2DDD5;
+    --bg: #FFFFFF;
+    --surface: #F8F9FA;
+    --surface2: #F1F3F5;
+    --border: #E5E7EB;
     --text: #1C1A17;
     --text-muted: #8A8479;
     --accent: #C17B3A;
@@ -79,25 +79,25 @@
   #app { display: none; min-height: 100vh; }
 
   header {
-    background: var(--text); color: #fff; padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between; height: 56px;
+    background: #fff; color: var(--text); padding: 0 32px;
+    display: flex; align-items: center; justify-content: flex-end; height: 52px;
     position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border);
   }
-  .header-logo { font-size: 1rem; font-weight: 600; letter-spacing: 0.01em; }
-  .header-logo span { color: var(--accent); }
+  .header-logo { display: none; }
   .header-actions { display: flex; align-items: center; gap: 12px; }
-  .sync-status { font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 6px; }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #888; }
+  .sync-status { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
   .sync-dot.ok { background: #4CAF50; }
   .sync-dot.syncing { background: var(--accent); animation: pulse 1s infinite; }
   .sync-dot.err { background: var(--red); }
   @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
-  .btn-icon { background: none; border: none; cursor: pointer; color: #aaa; padding: 6px; border-radius: 6px; transition: color 0.15s; }
-  .btn-icon:hover { color: #fff; }
+  .btn-icon { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 6px; border-radius: 6px; transition: color 0.15s; font-size: 1rem; }
+  .btn-icon:hover { color: var(--text); }
 
   nav {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    display: flex; gap: 0; padding: 0 24px; overflow-x: auto;
+    background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; gap: 0; padding: 0 32px; overflow-x: auto;
   }
   .nav-tab {
     padding: 14px 18px; font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
@@ -107,16 +107,16 @@
   .nav-tab:hover { color: var(--text); }
   .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  main { padding: 28px 24px; max-width: 1100px; margin: 0 auto; }
+  main { padding: 32px; max-width: 1100px; margin: 0 auto; }
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
   /* ── WIDGETS / DASHBOARD ────────────────────────────────── */
-  .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
   .widget {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px; box-shadow: var(--shadow);
+    background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; box-shadow: none;
   }
   .widget-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
   .widget-value { font-size: 1.9rem; font-weight: 600; color: var(--text); line-height: 1; }
@@ -150,7 +150,7 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg); }
 
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+  .card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: none; margin-bottom: 20px; overflow: hidden; }
 
   /* ── BADGES ─────────────────────────────────────────────── */
   .badge { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; }
@@ -186,10 +186,10 @@
   .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
   .form-input, .form-select, .form-textarea {
     padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
-    font-family: var(--font); font-size: 0.875rem; color: var(--text); background: var(--bg);
+    font-family: var(--font); font-size: 0.875rem; color: var(--text); background: #fff;
     transition: border-color 0.15s;
   }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); background: #fff; }
   .form-textarea { min-height: 80px; resize: vertical; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
@@ -245,6 +245,70 @@
   /* ── BUDGET CHART ─────────────────────────────────────────── */
   .budget-chart { display: flex; height: 24px; border-radius: 8px; overflow: hidden; margin-top: 8px; gap: 2px; }
   .budget-segment { height: 100%; transition: width 0.5s ease; }
+
+  /* ── TIJDLIJN ─────────────────────────────────────────────── */
+  .tl-grid { display: grid; gap: 0; }
+  .tl-header-row { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 4px; }
+  .tl-label-col { min-width: 160px; width: 160px; flex-shrink: 0; padding: 6px 0; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .tl-days-wrap { flex: 1; display: flex; position: relative; }
+  .tl-day-header { text-align: center; font-size: 0.7rem; color: var(--text-muted); padding: 4px 0; border-left: 1px solid var(--border); flex-shrink: 0; }
+  .tl-day-header.today { color: var(--accent); font-weight: 700; }
+  .tl-day-header.weekend { color: #ccc; }
+
+  .tl-row { display: flex; align-items: center; min-height: 38px; border-bottom: 1px solid var(--border); }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-row-label { min-width: 160px; width: 160px; flex-shrink: 0; padding: 6px 8px 6px 0; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tl-row-label strong { display: block; }
+  .tl-row-label span { font-size: 0.72rem; color: var(--text-muted); }
+  .tl-row-track { flex: 1; position: relative; height: 38px; }
+  .tl-day-bg { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--border); }
+  .tl-day-bg.today { border-left: 2px solid var(--accent); }
+  .tl-day-bg.weekend { background: var(--surface2); }
+
+  .tl-bar {
+    position: absolute; top: 8px; bottom: 8px;
+    border-radius: 6px; display: flex; align-items: center;
+    padding: 0 8px; font-size: 0.72rem; font-weight: 600; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: default; transition: filter 0.15s; min-width: 6px;
+  }
+  .tl-bar:hover { filter: brightness(1.1); z-index: 10; }
+  .tl-bar.point {
+    width: 22px !important; left: unset; border-radius: 50%;
+    padding: 0; justify-content: center; font-size: 0.9rem;
+  }
+  .tl-overlap-warn {
+    position: absolute; top: 0; bottom: 0; background: rgba(192,57,43,0.08);
+    border-top: 2px dashed var(--red); border-bottom: 2px dashed var(--red);
+    pointer-events: none; z-index: 1;
+  }
+  .tl-today-line {
+    position: absolute; top: -4px; bottom: -4px;
+    width: 2px; background: var(--accent); opacity: 0.5; z-index: 5; pointer-events: none;
+  }
+  .tl-overlap-badge {
+    display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+    background: var(--red-light); color: var(--red); border-radius: 99px;
+    font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; margin-right: 8px;
+  }
+
+  /* ── PRINT ────────────────────────────────────────────────── */
+  .btn-print { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-print:hover { border-color: var(--text-muted); color: var(--text); }
+
+  @media print {
+    #pin-screen, #setup-screen, header, nav, .section-header .btn,
+    .btn-print, .btn-danger, .btn-ghost, .modal-overlay,
+    #toast, .ruimte-tabs, #filter-ruimte { display: none !important; }
+    body { background: #fff; }
+    main { padding: 0; max-width: 100%; }
+    .tab-content { display: block !important; }
+    .card { border: 1px solid #ddd; box-shadow: none; page-break-inside: avoid; }
+    .widget { border: 1px solid #ddd; }
+    td select { appearance: none; border: none; background: none; padding: 0; font-size: 0.875rem; }
+    .print-section { display: block !important; }
+    .no-print { display: none !important; }
+  }
 
   @media (max-width: 640px) {
     main { padding: 16px; }
@@ -306,6 +370,7 @@
     <button class="nav-tab" onclick="showTab('leveranciers')">Leveranciers</button>
     <button class="nav-tab" onclick="showTab('inspiratie')">Inspiratie</button>
     <button class="nav-tab" onclick="showTab('agenda')">Agenda</button>
+    <button class="nav-tab" onclick="showTab('tijdlijn')">Tijdlijn</button>
   </nav>
 
   <main>
@@ -332,6 +397,7 @@
           <select class="form-select" id="filter-ruimte" onchange="renderTaken()" style="font-size:0.8rem;padding:6px 10px">
             <option value="">Alle ruimtes</option>
           </select>
+          <button class="btn btn-print" onclick="printSection('taken')">🖨 Printen</button>
           <button class="btn btn-primary" onclick="openModal('taak')">+ Taak toevoegen</button>
         </div>
       </div>
@@ -355,6 +421,7 @@
         <div class="section-title">Kosten</div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-ghost" onclick="openBudgetModal()">Budget instellen</button>
+          <button class="btn btn-print" onclick="printSection('kosten')">🖨 Printen</button>
           <button class="btn btn-primary" onclick="openModal('kost')">+ Uitgave toevoegen</button>
         </div>
       </div>
@@ -379,7 +446,10 @@
     <div id="tab-leveranciers" class="tab-content">
       <div class="section-header">
         <div class="section-title">Leveranciers & Contacten</div>
-        <button class="btn btn-primary" onclick="openModal('leverancier')">+ Toevoegen</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-print" onclick="printSection('leveranciers')">🖨 Printen</button>
+          <button class="btn btn-primary" onclick="openModal('leverancier')">+ Toevoegen</button>
+        </div>
       </div>
       <div class="card">
         <table>
@@ -406,10 +476,33 @@
     <div id="tab-agenda" class="tab-content">
       <div class="section-header">
         <div class="section-title">Agenda</div>
-        <button class="btn btn-primary" onclick="openModal('agenda')">+ Agenda item</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-print" onclick="printSection('agenda')">🖨 Printen</button>
+          <button class="btn btn-primary" onclick="openModal('agenda')">+ Agenda item</button>
+        </div>
       </div>
       <div class="agenda-list" id="agenda-list"></div>
       <div id="agenda-empty" class="empty" style="display:none"><div class="empty-icon">📅</div>Geen agenda items gepland.</div>
+    </div>
+    <!-- TIJDLIJN -->
+    <div id="tab-tijdlijn" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">Projecttijdlijn</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-ghost btn-sm" id="tl-prev" onclick="tlNav(-1)">← Vorige maand</button>
+          <span id="tl-month-label" style="font-size:0.9rem;font-weight:600;min-width:120px;text-align:center"></span>
+          <button class="btn btn-ghost btn-sm" id="tl-next" onclick="tlNav(1)">Volgende maand →</button>
+          <button class="btn btn-print" onclick="printSection('tijdlijn')">🖨 Printen</button>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:visible">
+        <div id="tijdlijn-wrap" style="overflow-x:auto;padding:20px 24px">
+          <div id="tijdlijn-canvas"></div>
+        </div>
+      </div>
+      <div id="tijdlijn-empty" class="empty" style="display:none">
+        <div class="empty-icon">📅</div>Geen agenda items om te tonen. Voeg items toe via de Agenda tab.
+      </div>
     </div>
   </main>
 </div>
@@ -659,10 +752,10 @@ function showTab(name) {
   if (name === 'kosten') renderKosten();
   if (name === 'leveranciers') renderLeveranciers();
   if (name === 'inspiratie') renderLinks();
-  if (name === 'agenda') renderAgenda();
+  if (name === 'tijdlijn') renderTijdlijn();
 }
 
-function renderAll() { renderDashboard(); renderTaken(); renderKosten(); renderLeveranciers(); renderLinks(); renderAgenda(); }
+function renderAll() { renderDashboard(); renderTaken(); renderKosten(); renderLeveranciers(); renderLinks(); renderAgenda(); renderTijdlijn(); }
 
 // ─────────────────────────────────────────────────────────────
 // DASHBOARD
@@ -1089,6 +1182,266 @@ function fmt(n) { return Number(n).toLocaleString('nl-NL', {minimumFractionDigit
 
 function statusBadge(s) {
   return {'te doen':'badge-gray','bezig':'badge-yellow','wacht op':'badge-blue','afgerond':'badge-green'}[s]||'badge-gray';
+}
+
+// ─────────────────────────────────────────────────────────────
+// TIJDLIJN
+// ─────────────────────────────────────────────────────────────
+let tlYear  = new Date().getFullYear();
+let tlMonth = new Date().getMonth(); // 0-indexed
+
+const TL_COLORS = [
+  '#C17B3A','#2874A6','#3A7D44','#8E44AD',
+  '#C0392B','#16A085','#D35400','#2C3E50'
+];
+
+function tlNav(dir) {
+  tlMonth += dir;
+  if (tlMonth > 11) { tlMonth = 0; tlYear++; }
+  if (tlMonth < 0)  { tlMonth = 11; tlYear--; }
+  renderTijdlijn();
+}
+
+function renderTijdlijn() {
+  const items = data.agenda;
+  const empty = document.getElementById('tijdlijn-empty');
+  const wrap  = document.getElementById('tijdlijn-wrap');
+  const canvas = document.getElementById('tijdlijn-canvas');
+
+  // Month bounds
+  const firstDay = new Date(tlYear, tlMonth, 1);
+  const lastDay  = new Date(tlYear, tlMonth + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Label
+  document.getElementById('tl-month-label').textContent =
+    firstDay.toLocaleString('nl', { month: 'long', year: 'numeric' });
+
+  // Filter items that fall (even partially) in this month
+  const visible = items.filter(a => {
+    if (!a.datum) return false;
+    const d = new Date(a.datum); d.setHours(0,0,0,0);
+    return d >= firstDay && d <= lastDay;
+  }).sort((a,b) => new Date(a.datum) - new Date(b.datum));
+
+  if (items.length === 0) {
+    empty.style.display = 'block'; wrap.style.display = 'none'; return;
+  }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+
+  // Day width (px)
+  const DAY_W = Math.max(28, Math.floor((Math.min(window.innerWidth - 280, 900)) / daysInMonth));
+
+  // Detect overlaps: group items by day
+  const byDay = {};
+  visible.forEach(a => {
+    const key = a.datum;
+    byDay[key] = byDay[key] || [];
+    byDay[key].push(a);
+  });
+  const overlapDays = Object.entries(byDay).filter(([,arr]) => arr.length > 1).map(([k]) => k);
+
+  // Build overlap badges
+  let overlapHtml = '';
+  if (overlapDays.length) {
+    overlapHtml = overlapDays.map(d => {
+      const dd = new Date(d);
+      return `<span class="tl-overlap-badge">⚠️ Overlap op ${dd.toLocaleDateString('nl',{day:'numeric',month:'short'})}: ${byDay[d].map(a=>a.titel).join(' & ')}</span>`;
+    }).join('');
+    overlapHtml = `<div style="margin-bottom:12px">${overlapHtml}</div>`;
+  }
+
+  // Header row: day numbers
+  let headerDays = '';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(tlYear, tlMonth, d);
+    const isToday = dt.getTime() === today.getTime();
+    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+    headerDays += `<div class="tl-day-header ${isToday?'today':''} ${isWeekend?'weekend':''}" style="width:${DAY_W}px">${d}</div>`;
+  }
+
+  // Weekday row
+  let headerWd = '';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(tlYear, tlMonth, d);
+    const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+    const names = ['zo','ma','di','wo','do','vr','za'];
+    headerWd += `<div class="tl-day-header ${isWeekend?'weekend':''}" style="width:${DAY_W}px;font-size:0.65rem">${names[dt.getDay()]}</div>`;
+  }
+
+  // Rows
+  let rowsHtml = '';
+  // Show all items OR a "geen items" row
+  const rowItems = visible.length > 0 ? visible : [];
+
+  // If no items this month but items exist in other months, show placeholder rows
+  if (rowItems.length === 0) {
+    rowsHtml = `<div class="tl-row">
+      <div class="tl-row-label" style="color:var(--text-muted);font-size:0.82rem">Geen items deze maand</div>
+      <div class="tl-row-track" style="width:${daysInMonth*DAY_W}px"></div>
+    </div>`;
+  }
+
+  rowItems.forEach((a, idx) => {
+    const itemDate = new Date(a.datum); itemDate.setHours(0,0,0,0);
+    const dayNum = itemDate.getDate(); // 1-based
+    const dayIdx = dayNum - 1;        // 0-based
+    const isOverlap = overlapDays.includes(a.datum);
+    const color = TL_COLORS[idx % TL_COLORS.length];
+
+    // Background grid cells
+    let bgCells = '';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dt = new Date(tlYear, tlMonth, d);
+      const isToday = dt.getTime() === today.getTime();
+      const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+      bgCells += `<div class="tl-day-bg ${isToday?'today':''} ${isWeekend?'weekend':''}" style="left:${(d-1)*DAY_W}px;width:${DAY_W}px"></div>`;
+    }
+
+    // Today line
+    const todayInMonth = today >= firstDay && today <= lastDay;
+    const todayLine = todayInMonth
+      ? `<div class="tl-today-line" style="left:${(today.getDate()-0.5)*DAY_W}px"></div>` : '';
+
+    // Bar: single-day event — centered dot/bar
+    const barLeft = dayIdx * DAY_W + 3;
+    const barWidth = DAY_W - 6;
+    const label = a.titel.length > 12 ? a.titel.slice(0,11)+'…' : a.titel;
+
+    rowsHtml += `
+    <div class="tl-row" title="${a.titel}${a.tijd?' om '+a.tijd:''}${a.persoon?' — '+a.persoon:''}">
+      <div class="tl-row-label">
+        <strong>${a.titel}</strong>
+        <span>${a.tijd||''} ${a.persoon?'· '+a.persoon:''}</span>
+      </div>
+      <div class="tl-row-track" style="width:${daysInMonth*DAY_W}px">
+        ${bgCells}
+        ${todayLine}
+        ${isOverlap ? `<div class="tl-overlap-warn" style="left:${dayIdx*DAY_W}px;width:${DAY_W}px"></div>` : ''}
+        <div class="tl-bar" style="left:${barLeft}px;width:${barWidth}px;background:${color}" title="${a.titel}">
+          ${barWidth > 40 ? label : ''}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  canvas.innerHTML = `
+    ${overlapHtml}
+    <div style="display:flex;flex-direction:column;min-width:${160 + daysInMonth*DAY_W}px">
+      <div class="tl-header-row">
+        <div class="tl-label-col">Item</div>
+        <div class="tl-days-wrap">${headerWd}</div>
+      </div>
+      <div class="tl-header-row" style="border-bottom:1px solid var(--border);margin-bottom:0">
+        <div class="tl-label-col"></div>
+        <div class="tl-days-wrap">${headerDays}</div>
+      </div>
+      ${rowsHtml}
+    </div>`;
+}
+
+
+function printSection(section) {
+  const titles = { taken: 'Taken', kosten: 'Kosten & Budget', leveranciers: 'Leveranciers', agenda: 'Agenda', tijdlijn: 'Tijdlijn' };
+  const el = document.getElementById('tab-' + section);
+  if (!el) return;
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="nl"><head>
+    <meta charset="UTF-8">
+    <title>Verbouwing — ${titles[section]}</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1C1A17; padding: 32px; font-size: 13px; }
+      h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+      .meta { color: #888; font-size: 11px; margin-bottom: 24px; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+      th { text-align: left; font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 10px; border-bottom: 2px solid #E5E7EB; }
+      td { padding: 10px 10px; border-bottom: 1px solid #E5E7EB; font-size: 12px; vertical-align: top; }
+      .badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 10px; font-weight: 600; border: 1px solid #ddd; }
+      .widget-row { display: flex; gap: 16px; margin-bottom: 20px; }
+      .widget { border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px; min-width: 140px; }
+      .widget-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+      .widget-value { font-size: 22px; font-weight: 700; }
+      .agenda-item { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid #E5E7EB; }
+      .agenda-day { font-size: 20px; font-weight: 700; color: #C17B3A; min-width: 28px; text-align: center; line-height: 1; }
+      .agenda-month { font-size: 9px; color: #888; text-transform: uppercase; text-align: center; }
+      .link-item { padding: 8px 0; border-bottom: 1px solid #E5E7EB; }
+      .link-url { color: #2874A6; font-size: 11px; }
+      select { appearance: none; border: none; background: none; font-size: 12px; }
+      @media print { body { padding: 16px; } }
+    </style>
+  </head><body>
+    <h1>Verbouwing — ${titles[section]}</h1>
+    <div class="meta">Geprint op ${new Date().toLocaleDateString('nl-NL', {day:'numeric',month:'long',year:'numeric'})}</div>
+  `);
+
+  if (section === 'taken') {
+    win.document.write(`<table><thead><tr><th>Taak</th><th>Ruimte</th><th>Toegewezen aan</th><th>Prioriteit</th><th>Status</th></tr></thead><tbody>`);
+    data.taken.forEach(t => {
+      win.document.write(`<tr><td><strong>${t.naam}</strong>${t.notities?'<br><span style="color:#888;font-size:11px">'+t.notities+'</span>':''}</td><td>${t.ruimte||'—'}</td><td>${t.persoon||'—'}</td><td>${t.prioriteit||'—'}</td><td>${t.status||'—'}</td></tr>`);
+    });
+    win.document.write('</tbody></table>');
+  }
+
+  if (section === 'kosten') {
+    const total = data.kosten.reduce((s,k)=>s+parseFloat(k.bedrag||0),0);
+    const budget = parseFloat(data.budget||0);
+    win.document.write(`<div class="widget-row">
+      <div class="widget"><div class="widget-label">Totaal uitgegeven</div><div class="widget-value">€${fmt(total)}</div></div>
+      ${budget?`<div class="widget"><div class="widget-label">Budget</div><div class="widget-value">€${fmt(budget)}</div></div><div class="widget"><div class="widget-label">Resterend</div><div class="widget-value" style="color:${total>budget?'#C0392B':'#3A7D44'}">€${fmt(budget-total)}</div></div>`:''}
+    </div>`);
+    win.document.write(`<table><thead><tr><th>Omschrijving</th><th>Categorie</th><th>Ruimte</th><th>Bedrag</th><th>Datum</th></tr></thead><tbody>`);
+    [...data.kosten].sort((a,b)=>new Date(b.datum)-new Date(a.datum)).forEach(k => {
+      win.document.write(`<tr><td><strong>${k.omschrijving}</strong>${k.notities?'<br><span style="color:#888;font-size:11px">'+k.notities+'</span>':''}</td><td>${k.categorie||'—'}</td><td>${k.ruimte||'—'}</td><td><strong>€${fmt(parseFloat(k.bedrag||0))}</strong></td><td>${k.datum||'—'}</td></tr>`);
+    });
+    win.document.write('</tbody></table>');
+  }
+
+  if (section === 'leveranciers') {
+    win.document.write(`<table><thead><tr><th>Naam</th><th>Bedrijf</th><th>Telefoon</th><th>Email</th><th>Specialisme</th><th>Status</th></tr></thead><tbody>`);
+    data.leveranciers.forEach(l => {
+      win.document.write(`<tr><td><strong>${l.naam}</strong></td><td>${l.bedrijf||'—'}</td><td>${l.telefoon||'—'}</td><td>${l.email||'—'}</td><td>${l.specialisme||'—'}</td><td>${l.status||'—'}</td></tr>`);
+    });
+    win.document.write('</tbody></table>');
+  }
+
+  if (section === 'agenda') {
+    const sorted = [...data.agenda].sort((a,b)=>new Date(a.datum)-new Date(b.datum));
+    sorted.forEach(a => {
+      const d = new Date(a.datum);
+      win.document.write(`<div class="agenda-item">
+        <div><div class="agenda-day">${d.getDate()}</div><div class="agenda-month">${d.toLocaleString('nl',{month:'short'})}</div></div>
+        <div><strong>${a.titel}</strong><br>
+          <span style="color:#888;font-size:11px">${a.tijd||''} ${a.persoon?'— '+a.persoon:''} ${a.ruimte?'— '+a.ruimte:''}</span>
+          ${a.notities?'<br><span style="font-size:11px">'+a.notities+'</span>':''}
+        </div>
+      </div>`);
+    });
+  }
+
+  if (section === 'tijdlijn') {
+    const firstDay = new Date(tlYear, tlMonth, 1);
+    const monthLabel = firstDay.toLocaleString('nl', { month: 'long', year: 'numeric' });
+    win.document.write(`<h2 style="font-size:14px;margin-bottom:16px">${monthLabel}</h2>`);
+    const visItems = data.agenda.filter(a => {
+      if (!a.datum) return false;
+      const d = new Date(a.datum); d.setHours(0,0,0,0);
+      return d >= firstDay && d <= new Date(tlYear, tlMonth + 1, 0);
+    }).sort((a,b) => new Date(a.datum)-new Date(b.datum));
+    win.document.write('<table><thead><tr><th>Datum</th><th>Tijd</th><th>Item</th><th>Persoon</th><th>Locatie</th></tr></thead><tbody>');
+    visItems.forEach(a => {
+      const d = new Date(a.datum);
+      win.document.write(`<tr><td>${d.toLocaleDateString('nl',{day:'numeric',month:'long'})}</td><td>${a.tijd||'—'}</td><td><strong>${a.titel}</strong>${a.notities?'<br><span style="color:#888;font-size:11px">'+a.notities+'</span>':''}</td><td>${a.persoon||'—'}</td><td>${a.ruimte||'—'}</td></tr>`);
+    });
+    win.document.write('</tbody></table>');
+  }
+
+  win.document.write('</body></html>');
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 300);
 }
 
 let toastTimer;
